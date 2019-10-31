@@ -18,5 +18,5 @@ variable "vpc_cidr" {
 
 variable "db_address" {
   description = "address of the DB server"
-  default = ""
+  default = "${aws_db_instance_default.address}"
 }
