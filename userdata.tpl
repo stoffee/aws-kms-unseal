@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-apt-get install -y unzip nginx jq
+sudo apt update
+sudo apt-get install -y unzip nginx jq
 # apt-get install -y libtool libltdl-dev 
 
 USER="vault"
