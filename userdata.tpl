@@ -238,7 +238,7 @@ cat << EOF > /etc/consul-template.d/yet-key.tpl
 {{ .Data.private_key }}{{ end }}
 EOF
 
-cat << EOF > /opt/vault/setup/consul-template.service
+cat << EOF > /etc/systemd/system/consul-template.service
 [Unit]
 Description=consul-template
 Requires=network-online.target
@@ -260,6 +260,7 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 
+#sudo mv /opt/vault/setup/consul-template.service 
 sudo systemctl daemon-reload >> /opt/vault/setup/bootstrap_config.log
 sudo systemctl enable consul-template.service >> /opt/vault/setup/bootstrap_config.log
 sudo systemctl start consul-template.service >> /opt/vault/setup/bootstrap_config.log
