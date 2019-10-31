@@ -120,5 +120,17 @@ export VAULT_ADDR=http://127.0.0.1:8200
 export VAULT_SKIP_VERIFY=true
 EOF
 
+source /etc/profile.d/vault.sh
+
 systemctl enable vault
 systemctl start vault
+
+sleep 10
+sudo touch /opt/vault/vault.unseal.info /opt/vault/setup.log
+sudo chmod 777 /opt/vault/vault.unseal.info /opt/vault/setup.log
+/usr/bin/vault operator init -recovery-shares=1 -recovery-threshold=1 >> /opt/vault/vault.unseal.info
+ROOT_TOKEN=`cat /opt/vault/vault.unseal.info |grep Root|awk '{print $4}'`
+/usr/bin/vault login $ROOT_TOKEN >> /opt/vault/setup.log
+/usr/bin/vault secrets enable transit >> /opt/vault/setup.log
+/usr/bin/vault secrets enable -path=encryption transit >> /opt/vault/setup.log
+/usr/bin/vault vault write -f transit/keys/orders >> /opt/vault/setup.log

@@ -63,13 +63,7 @@ data "template_file" "format_ssh" {
   }
 }
 
-output "connections" {
-  value = <<VAULT
-Connect to Vault via SSH   ssh ubuntu@${aws_instance.vault[0].public_ip} -i private.key
-Vault web interface  http://${aws_instance.vault[0].public_ip}:8200/ui
-VAULT
 
-}
 
 resource "aws_security_group" "vault" {
   name = "vault-kms-unseal-${random_pet.env.id}"
