@@ -15,3 +15,8 @@ variable "vpc_cidr" {
   description = "CIDR of the VPC"
   default     = "192.168.100.0/24"
 }
+
+variable "db_address" {
+  description = "address of the DB server"
+  default = ""
+}

@@ -311,7 +311,7 @@ vault secrets enable database
 vault write database/config/my-postgresql-database \
     plugin_name=postgresql-database-plugin \
     allowed_roles="my-role" \
-    connection_url="postgresql://{{username}}:{{password}}@${aws_db_instance.default.address}:5432/" \
+    connection_url="postgresql://{{username}}:{{password}}@${db_address}:5432/" \
     username="stoffee" \
     password="!4me2know!" >> /opt/vault/setup/bootstrap_config.log
 
