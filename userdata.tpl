@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-apt-get install -y unzip
+apt-get install -y unzip nginx jq
 # apt-get install -y libtool libltdl-dev 
 
 USER="vault"
@@ -128,6 +128,7 @@ systemctl start vault
 sleep 10
 
 sudo mkdir -p /opt/vault/setup
+sudo chmod 777 /opt/vault/setup
 sudo touch /opt/vault/setup/vault.unseal.info /opt/vault/setup/bootstrap_config.log
 sudo chmod 777 /opt/vault/setup/vault.unseal.info /opt/vault/setup/bootstrap_config.log
 sudo ln -s /usr/local/bin/vault /usr/bin/vault
@@ -140,7 +141,6 @@ vault secrets enable -path=encryption transit >> /opt/vault/setup/bootstrap_conf
 vault vault write -f transit/keys/orders >> /opt/vault/setup/bootstrap_config.log
 
 
-sudo apt -y install nginx >> /opt/vault/setup/bootstrap_config.log
 wget https://releases.hashicorp.com/consul-template/0.22.0/consul-template_0.22.0_linux_amd64.tgz >> /opt/vault/setup/bootstrap_config.log
 tar zxvf consul-template_0.22.0_linux_amd64.tgz >> /opt/vault/setup/bootstrap_config.log
 sudo mv consul-template /usr/local/bin/ >> /opt/vault/setup/bootstrap_config.log
