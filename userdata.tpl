@@ -191,7 +191,6 @@ curl --header "X-Vault-Token: $ROOT_TOKEN" --request POST --data @/opt/vault/set
 vault token create -policy=pki_int -ttl=24h >> /opt/vault/setup/consul-template-token
 CT_TOKEN=`sed -n 3p /opt/vault/setup/consul-template-token | awk '{print $2}'`
 
-vault login $CT_TOKEN >> /opt/vault/setup/bootstrap_config.log
 vault write pki_int/issue/stoffee-dot-io common_name=stoffee.io >> /opt/vault/setup/bootstrap_config.log
 
 mkdir /etc/consul-template.d/ >> /opt/vault/setup/bootstrap_config.log
@@ -199,7 +198,7 @@ cat << EOF > /etc/consul-template.d/pki-demo.hcl
 vault {
   address = "https://127.0.0.1:8200"
   renew_token = true
-  token = "s.o3nZIjtOIAwR8wfy6D3C3hF6"
+  token = "$CT_TOKEN"
   retry {
     enabled = true
     attempts = 5
@@ -297,5 +296,6 @@ systemctl restart nginx >> /opt/vault/setup/bootstrap_config.log
 systemctl status nginx >> /opt/vault/setup/bootstrap_config.log
 
 
+echo "teh vault of CT_TOKEN is $CT_TOKEN"
 echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
