@@ -126,11 +126,32 @@ systemctl enable vault
 systemctl start vault
 
 sleep 10
+
 sudo touch /opt/vault/vault.unseal.info /opt/vault/setup.log
 sudo chmod 777 /opt/vault/vault.unseal.info /opt/vault/setup.log
-/usr/bin/vault operator init -recovery-shares=1 -recovery-threshold=1 >> /opt/vault/vault.unseal.info
+sudo ln -s /usr/local/bin/vault /usr/bin/vault
+
+vault operator init -recovery-shares=1 -recovery-threshold=1 >> /opt/vault/vault.unseal.info
 ROOT_TOKEN=`cat /opt/vault/vault.unseal.info |grep Root|awk '{print $4}'`
-/usr/bin/vault login $ROOT_TOKEN >> /opt/vault/setup.log
-/usr/bin/vault secrets enable transit >> /opt/vault/setup.log
-/usr/bin/vault secrets enable -path=encryption transit >> /opt/vault/setup.log
-/usr/bin/vault vault write -f transit/keys/orders >> /opt/vault/setup.log
+vault login $ROOT_TOKEN >> /opt/vault/setup.log
+vault secrets enable transit >> /opt/vault/setup.log
+vault secrets enable -path=encryption transit >> /opt/vault/setup.log
+vault vault write -f transit/keys/orders >> /opt/vault/setup.log
+
+
+sudo apt -y install nginx
+wget https://releases.hashicorp.com/consul-template/0.22.0/consul-template_0.22.0_linux_amd64.tgz
+tar zxvf consul-template_0.22.0_linux_amd64.tgz
+sudo mv consul-template /usr/local/bin/
+sudo ln -s /usr/local/bin/consul-template /usr/bin/consul-template
+
+vault secrets enable pki
+vault write -format=json pki/root/generate/internal common_name="pki-ca-root" ttl=87600h | tee  >(jq -r .data.certificate > ca.pem)  >(jq -r .data.issuing_ca > issuing_ca.pem) >(jq -r .data.private_key > ca-key.pem)
+curl -s http://localhost:8200/v1/pki/ca/pem | openssl x509 -text
+
+vault secrets enable -path pki_int pki
+vault write -format=json pki_int/intermediate/generate/internal common_name="pki-ca-int" ttl=43800h | tee >(jq -r .data.csr > pki_int.csr) >(jq -r .data.private_key > pki_int.pem)
+vault write -format=json pki/root/sign-intermediate csr=@pki_int.csr common_name="pki-ca-int" ttl=43800h | tee >(jq -r .data.certificate > pki_int.pem) >(jq -r .data.issuing_ca > pki_int_issuing_ca.pem)
+vault write pki_int/intermediate/set-signed certificate=@pki_int.pem
+vault write pki_int/roles/stoffee-dot-io allow_any_name=true max_ttl="2m" generate_lease=true
+
