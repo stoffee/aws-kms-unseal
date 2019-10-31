@@ -196,8 +196,7 @@ CT_TOKEN=`sed -n 3p /opt/vault/setup/consul-template-token | awk '{print $2}'`
 vault login $CT_TOKEN >> /opt/vault/setup/bootstrap_config.log
 vault write pki_int/issue/stoffee-dot-io common_name=stoffee.io >> /opt/vault/setup/bootstrap_config.log
 
-sudo mkdir /etc/consul-template.d/ >> /opt/vault/setup/bootstrap_config.log
-sudo chmod 777 /etc/consul-template.d/ >> /opt/vault/setup/bootstrap_config.log
+mkdir /etc/consul-template.d/ >> /opt/vault/setup/bootstrap_config.log
 cat << EOF > /etc/consul-template.d/pki-demo.hcl
 vault {
   address = "https://127.0.0.1:8200"
@@ -223,7 +222,7 @@ template {
 }
 EOF
 
-sudo mkdir -p /etc/nginx/certs >> /opt/vault/setup/bootstrap_config.log
+mkdir -p /etc/nginx/certs >> /opt/vault/setup/bootstrap_config.log
 
 cat << EOF > /etc/consul-template.d/yet-cert.tpl
 {{- /* yet-cert.tpl */ -}}
@@ -260,16 +259,13 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 
-#sudo mv /opt/vault/setup/consul-template.service 
 sudo systemctl daemon-reload >> /opt/vault/setup/bootstrap_config.log
 sudo systemctl enable consul-template.service >> /opt/vault/setup/bootstrap_config.log
 sudo systemctl start consul-template.service >> /opt/vault/setup/bootstrap_config.log
 sudo systemctl status consul-template.service >> /opt/vault/setup/bootstrap_config.log
 
-sudo mv /opt/vault/setup/consul-template.service /etc/systemd/system/consul-template.service >> /opt/vault/setup/bootstrap_config.log
-
-sudo mkdir -p /etc/nginx/sites-available >> /opt/vault/setup/bootstrap_config.log
-cat << EOF > /opt/vault/setup/pki-demo
+mkdir -p /etc/nginx/sites-available >> /opt/vault/setup/bootstrap_config.log
+cat << EOF > /etc/nginx/sites-available/pki-demo
 # redirect traffic from http to https.
 server {
 listen              80;
@@ -296,11 +292,11 @@ server {
 }
 EOF
 
-sudo mv /opt/vault/setup/pki-demo /etc/nginx/sites-available/pki-demo >> /opt/vault/setup/bootstrap_config.log
-sudo ln -s /etc/nginx/sites-available/pki-demo /etc/nginx/sites-enabled/pki-demo >> /opt/vault/setup/bootstrap_config.log
-sudo rm /etc/nginx/sites-enabled/default >> /opt/vault/setup/bootstrap_config.log
-sudo systemctl restart nginx >> /opt/vault/setup/bootstrap_config.log
-sudo systemctl status nginx >> /opt/vault/setup/bootstrap_config.log
+ln -s /etc/nginx/sites-available/pki-demo /etc/nginx/sites-enabled/pki-demo >> /opt/vault/setup/bootstrap_config.log
+rm /etc/nginx/sites-enabled/default >> /opt/vault/setup/bootstrap_config.log
+sleep 10
+systemctl restart nginx >> /opt/vault/setup/bootstrap_config.log
+systemctl status nginx >> /opt/vault/setup/bootstrap_config.log
 
 
 echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
