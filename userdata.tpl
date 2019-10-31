@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-sudo apt update
-sudo apt-get install -y unzip nginx jq
+apt update
+apt-get install -y unzip nginx jq
 # apt-get install -y libtool libltdl-dev 
 
 USER="vault"
@@ -111,10 +111,10 @@ ui=true
 EOF
 
 
-sudo chmod 0664 /lib/systemd/system/vault.service
+chmod 0664 /lib/systemd/system/vault.service
 systemctl daemon-reload
-sudo chown -R vault:vault /etc/vault.d
-sudo chmod -R 0644 /etc/vault.d/*
+chown -R vault:vault /etc/vault.d
+chmod -R 0644 /etc/vault.d/*
 
 cat << EOF > /etc/profile.d/vault.sh
 export VAULT_ADDR=http://127.0.0.1:8200
@@ -128,11 +128,9 @@ systemctl start vault
 
 sleep 10
 
-sudo mkdir -p /opt/vault/setup
-sudo chmod 777 /opt/vault/setup
-sudo touch /opt/vault/setup/vault.unseal.info /opt/vault/setup/bootstrap_config.log
-sudo chmod 777 /opt/vault/setup/vault.unseal.info /opt/vault/setup/bootstrap_config.log
-sudo ln -s /usr/local/bin/vault /usr/bin/vault
+mkdir -p /opt/vault/setup
+touch /opt/vault/setup/vault.unseal.info /opt/vault/setup/bootstrap_config.log
+ln -s /usr/local/bin/vault /usr/bin/vault
 
 vault operator init -recovery-shares=1 -recovery-threshold=1 >> /opt/vault/setup/vault.unseal.info
 ROOT_TOKEN=`cat /opt/vault/setup/vault.unseal.info |grep Root|awk '{print $4}'`
@@ -144,8 +142,8 @@ vault vault write -f transit/keys/orders >> /opt/vault/setup/bootstrap_config.lo
 
 wget https://releases.hashicorp.com/consul-template/0.22.0/consul-template_0.22.0_linux_amd64.tgz >> /opt/vault/setup/bootstrap_config.log
 tar zxvf consul-template_0.22.0_linux_amd64.tgz >> /opt/vault/setup/bootstrap_config.log
-sudo mv consul-template /usr/local/bin/ >> /opt/vault/setup/bootstrap_config.log
-sudo ln -s /usr/local/bin/consul-template /usr/bin/consul-template >> /opt/vault/setup/bootstrap_config.log
+mv consul-template /usr/local/bin/ >> /opt/vault/setup/bootstrap_config.log
+ln -s /usr/local/bin/consul-template /usr/bin/consul-template >> /opt/vault/setup/bootstrap_config.log
 
 vault secrets enable pki >> /opt/vault/setup/bootstrap_config.log
 vault write -format=json pki/root/generate/internal common_name="pki-ca-root" ttl=87600h | tee  >(jq -r .data.certificate > ca.pem)  >(jq -r .data.issuing_ca > issuing_ca.pem) >(jq -r .data.private_key > ca-key.pem) >> /opt/vault/setup/bootstrap_config.log
@@ -181,14 +179,14 @@ path "pki_int/issue/*" {
     }
 EOF
 
-vault policy write pki_int pki_int.hcl >> /opt/vault/setup/bootstrap_config.log
+vault policy write pki_int /opt/vault/setup/pki_int.hcl >> /opt/vault/setup/bootstrap_config.log
 vault write pki_int/config/urls issuing_certificates="http://127.0.0.1:8200/v1/pki_int/ca" crl_distribution_points="http://127.0.0.1:8200/v1/pki_int/crl" >> /opt/vault/setup/bootstrap_config.log
 
 cat << EOF > /opt/vault/setup/expiration.json
 { "expiry": "2m" }
 EOF
 
-curl --header "X-Vault-Token: $ROOT_TOKEN" --request POST --data @expiration.json https://127.0.0.1:8200/v1/pki_int/config/crl >> /opt/vault/setup/bootstrap_config.log
+curl --header "X-Vault-Token: $ROOT_TOKEN" --request POST --data @/opt/vault/setup/expiration.json https://127.0.0.1:8200/v1/pki_int/config/crl >> /opt/vault/setup/bootstrap_config.log
 
 vault token create -policy=pki_int -ttl=24h >> /opt/vault/setup/consul-template-token
 CT_TOKEN=`sed -n 3p /opt/vault/setup/consul-template-token | awk '{print $2}'`
