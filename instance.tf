@@ -24,7 +24,7 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "vault" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   count         = 1
   subnet_id     = aws_subnet.public_subnet.id
 #  key_name      = "vault-kms-unseal-${random_pet.env.id}"
