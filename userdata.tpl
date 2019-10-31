@@ -296,7 +296,6 @@ systemctl restart nginx >> /opt/vault/setup/bootstrap_config.log
 systemctl status nginx >> /opt/vault/setup/bootstrap_config.log
 
 
-echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
 ##
 ###
@@ -305,3 +304,24 @@ echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 #####
 ###
 ##
+
+vault login $ROOT_TOKEN
+
+vault secrets enable database
+vault write database/config/my-postgresql-database \
+    plugin_name=postgresql-database-plugin \
+    allowed_roles="my-role" \
+    connection_url="postgresql://{{username}}:{{password}}@${data.aws_db_instance.default.address}:5432/" \
+    username="stoffee" \
+    password="!4me2know!" >> /opt/vault/setup/bootstrap_config.log
+
+vault write database/roles/my-role \
+    db_name=my-postgresql-database \
+    creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
+        GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+    default_ttl="1h" \
+    max_ttl="24h" >> /opt/vault/setup/bootstrap_config.log
+
+
+
+echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
