@@ -186,7 +186,7 @@ cat << EOF > /opt/vault/setup/expiration.json
 { "expiry": "2m" }
 EOF
 
-curl --header "X-Vault-Token: $ROOT_TOKEN" --request POST --data @/opt/vault/setup/expiration.json https://127.0.0.1:8200/v1/pki_int/config/crl >> /opt/vault/setup/bootstrap_config.log
+curl --header "X-Vault-Token: $ROOT_TOKEN" --request POST --data @/opt/vault/setup/expiration.json http://127.0.0.1:8200/v1/pki_int/config/crl >> /opt/vault/setup/bootstrap_config.log
 
 vault token create -policy=pki_int -ttl=24h >> /opt/vault/setup/consul-template-token
 CT_TOKEN=`sed -n 3p /opt/vault/setup/consul-template-token | awk '{print $2}'`
@@ -196,7 +196,7 @@ vault write pki_int/issue/stoffee-dot-io common_name=stoffee.io >> /opt/vault/se
 mkdir /etc/consul-template.d/ >> /opt/vault/setup/bootstrap_config.log
 cat << EOF > /etc/consul-template.d/pki-demo.hcl
 vault {
-  address = "https://127.0.0.1:8200"
+  address = "http://127.0.0.1:8200"
   renew_token = true
   token = "$CT_TOKEN"
   retry {

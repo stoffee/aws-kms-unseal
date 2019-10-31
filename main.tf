@@ -14,7 +14,7 @@ resource "aws_vpc" "vpc" {
   tags = {
     Name = "vault-kms-unseal-${random_pet.env.id}"
     Owner = "cdunlap"
-    TTL = "24hrs"
+    TTL = "48"
   }
 }
 
