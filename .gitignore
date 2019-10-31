@@ -1,4 +1,13 @@
-terraform.tfvars
-private.key
-terraform.tfstate
-terraform.tfstate.backup
+#  Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# .tfvars files
+*.tfvars
+
+remote.tf
+*.key
+*.pem

@@ -11,6 +11,6 @@ resource "aws_db_instance" "default" {
   skip_final_snapshot  = true
 }
 
-data "db_instance" "address" {
+data "aws_db_instance" "default" {
   db_address = data.aws_db_instance.default.address
 }
