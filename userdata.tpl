@@ -127,31 +127,179 @@ systemctl start vault
 
 sleep 10
 
-sudo touch /opt/vault/vault.unseal.info /opt/vault/setup.log
-sudo chmod 777 /opt/vault/vault.unseal.info /opt/vault/setup.log
+sudo mkdir -p /opt/vault/setup
+sudo touch /opt/vault/setup/vault.unseal.info /opt/vault/setup/bootstrap_config.log
+sudo chmod 777 /opt/vault/setup/vault.unseal.info /opt/vault/setup/bootstrap_config.log
 sudo ln -s /usr/local/bin/vault /usr/bin/vault
 
-vault operator init -recovery-shares=1 -recovery-threshold=1 >> /opt/vault/vault.unseal.info
-ROOT_TOKEN=`cat /opt/vault/vault.unseal.info |grep Root|awk '{print $4}'`
-vault login $ROOT_TOKEN >> /opt/vault/setup.log
-vault secrets enable transit >> /opt/vault/setup.log
-vault secrets enable -path=encryption transit >> /opt/vault/setup.log
-vault vault write -f transit/keys/orders >> /opt/vault/setup.log
+vault operator init -recovery-shares=1 -recovery-threshold=1 >> /opt/vault/setup/vault.unseal.info
+ROOT_TOKEN=`cat /opt/vault/setup/vault.unseal.info |grep Root|awk '{print $4}'`
+vault login $ROOT_TOKEN >> /opt/vault/setup/bootstrap_config.log
+vault secrets enable transit >> /opt/vault/setup/bootstrap_config.log
+vault secrets enable -path=encryption transit >> /opt/vault/setup/bootstrap_config.log
+vault vault write -f transit/keys/orders >> /opt/vault/setup/bootstrap_config.log
 
 
-sudo apt -y install nginx
-wget https://releases.hashicorp.com/consul-template/0.22.0/consul-template_0.22.0_linux_amd64.tgz
-tar zxvf consul-template_0.22.0_linux_amd64.tgz
-sudo mv consul-template /usr/local/bin/
-sudo ln -s /usr/local/bin/consul-template /usr/bin/consul-template
+sudo apt -y install nginx >> /opt/vault/setup/bootstrap_config.log
+wget https://releases.hashicorp.com/consul-template/0.22.0/consul-template_0.22.0_linux_amd64.tgz >> /opt/vault/setup/bootstrap_config.log
+tar zxvf consul-template_0.22.0_linux_amd64.tgz >> /opt/vault/setup/bootstrap_config.log
+sudo mv consul-template /usr/local/bin/ >> /opt/vault/setup/bootstrap_config.log
+sudo ln -s /usr/local/bin/consul-template /usr/bin/consul-template >> /opt/vault/setup/bootstrap_config.log
 
-vault secrets enable pki
-vault write -format=json pki/root/generate/internal common_name="pki-ca-root" ttl=87600h | tee  >(jq -r .data.certificate > ca.pem)  >(jq -r .data.issuing_ca > issuing_ca.pem) >(jq -r .data.private_key > ca-key.pem)
-curl -s http://localhost:8200/v1/pki/ca/pem | openssl x509 -text
+vault secrets enable pki >> /opt/vault/setup/bootstrap_config.log
+vault write -format=json pki/root/generate/internal common_name="pki-ca-root" ttl=87600h | tee  >(jq -r .data.certificate > ca.pem)  >(jq -r .data.issuing_ca > issuing_ca.pem) >(jq -r .data.private_key > ca-key.pem) >> /opt/vault/setup/bootstrap_config.log
+curl -s http://localhost:8200/v1/pki/ca/pem | openssl x509 -text >> /opt/vault/setup/bootstrap_config.log
 
-vault secrets enable -path pki_int pki
-vault write -format=json pki_int/intermediate/generate/internal common_name="pki-ca-int" ttl=43800h | tee >(jq -r .data.csr > pki_int.csr) >(jq -r .data.private_key > pki_int.pem)
-vault write -format=json pki/root/sign-intermediate csr=@pki_int.csr common_name="pki-ca-int" ttl=43800h | tee >(jq -r .data.certificate > pki_int.pem) >(jq -r .data.issuing_ca > pki_int_issuing_ca.pem)
-vault write pki_int/intermediate/set-signed certificate=@pki_int.pem
-vault write pki_int/roles/stoffee-dot-io allow_any_name=true max_ttl="2m" generate_lease=true
+vault secrets enable -path pki_int pki >> /opt/vault/setup/bootstrap_config.log
+vault write -format=json pki_int/intermediate/generate/internal common_name="pki-ca-int" ttl=43800h | tee >(jq -r .data.csr > pki_int.csr) >(jq -r .data.private_key > pki_int.pem) >> /opt/vault/setup/bootstrap_config.log
+vault write -format=json pki/root/sign-intermediate csr=@pki_int.csr common_name="pki-ca-int" ttl=43800h | tee >(jq -r .data.certificate > pki_int.pem) >(jq -r .data.issuing_ca > pki_int_issuing_ca.pem) >> /opt/vault/setup/bootstrap_config.log
+vault write pki_int/intermediate/set-signed certificate=@pki_int.pem >> /opt/vault/setup/bootstrap_config.log
+vault write pki_int/roles/stoffee-dot-io allow_any_name=true max_ttl="2m" generate_lease=true >> /opt/vault/setup/bootstrap_config.log
+
+cat << EOF > /opt/vault/setup/pki_int.hcl
+path "pki_int/issue/*" {
+      capabilities = ["create", "update"]
+    }
+    path "pki_int/certs" {
+      capabilities = ["list"]
+    }
+    path "pki_int/revoke" {
+      capabilities = ["create", "update"]
+    }
+    path "pki_int/tidy" {
+      capabilities = ["create", "update"]
+    }
+    path "pki/cert/ca" {
+      capabilities = ["read"]
+    }
+    path "auth/token/renew" {
+      capabilities = ["update"]
+    }
+    path "auth/token/renew-self" {
+      capabilities = ["update"]
+    }
+EOF
+
+vault policy write pki_int pki_int.hcl >> /opt/vault/setup/bootstrap_config.log
+vault write pki_int/config/urls issuing_certificates="http://127.0.0.1:8200/v1/pki_int/ca" crl_distribution_points="http://127.0.0.1:8200/v1/pki_int/crl" >> /opt/vault/setup/bootstrap_config.log
+
+cat << EOF > /opt/vault/setup/expiration.json
+{ "expiry": "2m" }
+EOF
+
+curl --header "X-Vault-Token: $ROOT_TOKEN" --request POST --data @expiration.json https://127.0.0.1:8200/v1/pki_int/config/crl >> /opt/vault/setup/bootstrap_config.log
+
+vault token create -policy=pki_int -ttl=24h >> /opt/vault/setup/consul-template-token
+CT_TOKEN=`sed -n 3p /opt/vault/setup/consul-template-token | awk '{print $2}'`
+
+vault login $CT_TOKEN >> /opt/vault/setup/bootstrap_config.log
+vault write pki_int/issue/stoffee-dot-io common_name=stoffee.io >> /opt/vault/setup/bootstrap_config.log
+
+sudo mkdir /etc/consul-template.d/ >> /opt/vault/setup/bootstrap_config.log
+sudo chmod 777 /etc/consul-template.d/ >> /opt/vault/setup/bootstrap_config.log
+cat << EOF > /etc/consul-template.d/pki-demo.hcl
+vault {
+  address = "https://127.0.0.1:8200"
+  renew_token = true
+  token = "s.o3nZIjtOIAwR8wfy6D3C3hF6"
+  retry {
+    enabled = true
+    attempts = 5
+    backoff = "250ms"
+  }
+}
+template {
+  source      = "/etc/consul-template.d/yet-cert.tpl"
+  destination = "/etc/nginx/certs/yet.crt"
+  perms       = "0600"
+  command     = "systemctl reload nginx"
+}
+template {
+  source      = "/etc/consul-template.d/yet-key.tpl"
+  destination = "/etc/nginx/certs/yet.key"
+  perms       = "0600"
+  command     = "systemctl reload nginx"
+}
+EOF
+
+sudo mkdir -p /etc/nginx/certs >> /opt/vault/setup/bootstrap_config.log
+
+cat << EOF > /etc/consul-template.d/yet-cert.tpl
+{{- /* yet-cert.tpl */ -}}
+{{ with secret "pki_int/issue/stoffee-dot-io" "common_name=stoffee.io"     "ttl=2m" }}
+{{ .Data.certificate }}
+{{ .Data.issuing_ca }}{{ end }}
+EOF
+
+cat << EOF > /etc/consul-template.d/yet-key.tpl
+{{- /* yet-cert.tpl */ -}}
+{{ with secret "pki_int/issue/stoffee-dot-io" "common_name=stoffee.io"     "ttl=2m" }} 
+{{ .Data.private_key }}{{ end }}
+EOF
+
+cat << EOF > /opt/vault/setup/consul-template.service
+[Unit]
+Description=consul-template
+Requires=network-online.target
+After=network-online.target
+
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/consul-template
+Restart=on-failure
+ExecStart=/usr/local/bin/consul-template $OPTIONS -config='/etc/consul-template.d/pki-demo.hcl'
+KillSignal=SIGINT
+ExecReload=/bin/kill --signal HUP
+KillMode=process
+Restart=on-failure
+RestartSec=5
+
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload >> /opt/vault/setup/bootstrap_config.log
+sudo systemctl enable consul-template.service >> /opt/vault/setup/bootstrap_config.log
+sudo systemctl start consul-template.service >> /opt/vault/setup/bootstrap_config.log
+sudo systemctl status consul-template.service >> /opt/vault/setup/bootstrap_config.log
+
+sudo mv /opt/vault/setup/consul-template.service /etc/systemd/system/consul-template.service >> /opt/vault/setup/bootstrap_config.log
+
+sudo mkdir -p /etc/nginx/sites-available >> /opt/vault/setup/bootstrap_config.log
+cat << EOF > /opt/vault/setup/pki-demo
+# redirect traffic from http to https.
+server {
+listen              80;
+listen              [::]:80;
+server_name         stoffee.io www.stoffee.io;
+return 301          https://stoffee.io$request_uri;
+return 301          https://www.stoffee.io$request_uri;
+}
+
+
+server {
+    listen              443 ssl http2 default_server;
+    server_name         stoffee.io www.stoffee.io;
+    ssl_certificate     /etc/nginx/certs/yet.crt;
+    ssl_certificate_key /etc/nginx/certs/yet.key;
+    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+
+
+    location / {
+      root   /usr/share/nginx/html;
+      index  index.html index.htm;
+    }
+}
+EOF
+
+sudo mv /opt/vault/setup/pki-demo /etc/nginx/sites-available/pki-demo >> /opt/vault/setup/bootstrap_config.log
+sudo ln -s /etc/nginx/sites-available/pki-demo /etc/nginx/sites-enabled/pki-demo >> /opt/vault/setup/bootstrap_config.log
+sudo rm /etc/nginx/sites-enabled/default >> /opt/vault/setup/bootstrap_config.log
+sudo systemctl restart nginx >> /opt/vault/setup/bootstrap_config.log
+sudo systemctl status nginx >> /opt/vault/setup/bootstrap_config.log
+
+
+echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
