@@ -296,6 +296,12 @@ systemctl restart nginx >> /opt/vault/setup/bootstrap_config.log
 systemctl status nginx >> /opt/vault/setup/bootstrap_config.log
 
 
-echo "teh vault of CT_TOKEN is $CT_TOKEN"
 echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
+##
+###
+#####
+## configure postgres ##
+#####
+###
+##
