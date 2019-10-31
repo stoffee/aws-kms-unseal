@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "random_pet" "env" {
   length    = 2
-  separator = "_"
+  separator = "-"
 }
 
 resource "aws_vpc" "vpc" {
@@ -13,6 +13,8 @@ resource "aws_vpc" "vpc" {
 
   tags = {
     Name = "vault-kms-unseal-${random_pet.env.id}"
+    Owner = "cdunlap"
+    TTL = "24hrs"
   }
 }
 
