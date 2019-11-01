@@ -33,7 +33,18 @@ resource "aws_subnet" "public_subnet" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.namespace}-${random_pet.env.id}"
+    Name = "${var.namespace}-pub-${random_pet.env.id}"
+  }
+}
+
+resource "aws_subnet" "postgres" {
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = var.vpc_cidr
+  availability_zone       = var.aws_zone
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "${var.namespace}-postgres-${random_pet.env.id}"
   }
 }
 
