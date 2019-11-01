@@ -12,7 +12,7 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "vault-kms-unseal-${random_pet.env.id}"
+    Name = "${var.namespace}-${random_pet.env.id}"
     Owner = "cdunlap"
     TTL = "48"
   }
@@ -22,7 +22,7 @@ resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "vault-kms-unseal-${random_pet.env.id}"
+    Name = "${var.namespace}-${random_pet.env.id}"
   }
 }
 
@@ -33,7 +33,7 @@ resource "aws_subnet" "public_subnet" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "vault-kms-unseal-${random_pet.env.id}"
+    Name = "${var.namespace}-${random_pet.env.id}"
   }
 }
 
@@ -46,7 +46,7 @@ resource "aws_route_table" "route" {
   }
 
   tags = {
-    Name = "vault-kms-unseal-${random_pet.env.id}"
+    Name = "${var.namespace}-${random_pet.env.id}"
   }
 }
 

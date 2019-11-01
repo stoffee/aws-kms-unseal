@@ -20,3 +20,8 @@ variable "db_address" {
   description = "address of the DB server"
   default = "aws_db_instance_default.address"
 }
+
+variable "namespace" {
+  description = "Prepended name of all resources"
+  default = "aws-vault"
+}

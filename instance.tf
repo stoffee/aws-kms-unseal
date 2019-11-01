@@ -3,7 +3,7 @@ resource "aws_kms_key" "vault" {
   deletion_window_in_days = 10
 
   tags = {
-    Name = "vault-kms-unseal-${random_pet.env.id}"
+    Name = "${var.namespace}-${random_pet.env.id}"
   }
 }
 
@@ -27,7 +27,7 @@ resource "aws_instance" "vault" {
   instance_type = "t2.medium"
   count         = 1
   subnet_id     = aws_subnet.public_subnet.id
-#  key_name      = "vault-kms-unseal-${random_pet.env.id}"
+#  key_name      = "${var.namespace}-${random_pet.env.id}"
   key_name      = "cdunlap-aws"
 
   security_groups = [
@@ -39,7 +39,7 @@ resource "aws_instance" "vault" {
   iam_instance_profile        = aws_iam_instance_profile.vault-kms-unseal.id
 
   tags = {
-    Name = "vault-kms-unseal-${random_pet.env.id}"
+    Name = "${var.namespace}-${random_pet.env.id}"
   }
 
   user_data = data.template_file.vault.rendered
@@ -67,12 +67,12 @@ data "template_file" "format_ssh" {
 
 
 resource "aws_security_group" "vault" {
-  name = "vault-kms-unseal-${random_pet.env.id}"
+  name = "${var.namespace}-${random_pet.env.id}"
   description = "vault access"
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "vault-kms-unseal-${random_pet.env.id}"
+    Name = "${var.namespace}-${random_pet.env.id}"
   }
 
   # SSH
