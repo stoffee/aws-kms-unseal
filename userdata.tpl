@@ -305,6 +305,7 @@ systemctl status nginx >> /opt/vault/setup/bootstrap_config.log
 ###
 ##
 
+DB_ADDRESS=$TF_VAR_db_address
 DB_ADDRESS="${db_address}"
 
 vault login $ROOT_TOKEN
