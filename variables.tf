@@ -16,6 +16,12 @@ variable "vpc_cidr" {
   default     = "192.168.100.0/24"
 }
 
+variable "postgres_cidr" {
+  type        = string
+  description = "CIDR of the VPC"
+  default     = "192.168.101.0/24"
+}
+
 variable "db_address" {
   description = "address of the DB server"
   default = "aws_db_instance_default.address"
