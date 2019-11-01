@@ -6,6 +6,10 @@ variable "aws_zone" {
   default = "us-west-1c"
 }
 
+variable "aws_zone-2" {
+  default = "us-west-1b"
+}
+
 variable "vault_url" {
   default = "https://releases.hashicorp.com/vault/1.2.3/vault_1.2.3_linux_amd64.zip"
 }
