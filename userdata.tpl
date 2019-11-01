@@ -311,21 +311,40 @@ echo "the OUTPUT of the DB_ADDRESS is ${db_address}" >> /opt/vault/setup/bootstr
 vault login $ROOT_TOKEN
 
 vault secrets enable database
-vault write database/config/my-postgresql-database \
+vault write database/config/proddb \
     plugin_name=postgresql-database-plugin \
-    allowed_roles="my-role" \
+    allowed_roles="admin-role" \
     connection_url="postgresql://{{username}}:{{password}}@${db_address}:5432/" \
-    username="stoffee" \
+    username="dbadmin" \
     password="!4me2know!" >> /opt/vault/setup/bootstrap_config.log
 
-vault write database/roles/my-role \
+vault write database/roles/admin-role \
     db_name=proddb \
     creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
         GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
     default_ttl="1h" \
     max_ttl="24h" >> /opt/vault/setup/bootstrap_config.log
+# call this with vault read database/creds/admin-role
+echo "vault read database/creds/admin-role" >> /opt/vault/setup/admin-role-db
+vault read database/creds/admin-role >> /opt/vault/setup/admin-role-db
 
 
+##
+###
+#####
+## Configure Transit Secrets Engine ##
+#####
+###
+##
+
+vault secrets enable transit
+vault secrets enable -path=encryption transit
+vault write -f transit/keys/orders
+vault write transit/encrypt/orders plaintext=$(base64 <<< "4111 1111 1111 1111") >> /opt/vault/setup/plaintext
+vault write transit/decrypt/orders \
+        ciphertext="vault:v1:cZNHVx+sxdMErXRSuDa1q/pz49fXTn1PScKfhf+PIZPvy8xKfkytpwKcbC0fF2U=" >> /opt/vault/setup/ciphertext
+echo "base64 --decode <<< \"Y3JlZGl0LWNhcmQtbnVtYmVyCg==\"" >>  /opt/vault/setup/ciphertext
+base64 --decode <<< "Y3JlZGl0LWNhcmQtbnVtYmVyCg==" >>  /opt/vault/setup/ciphertext
 
 echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
@@ -333,4 +352,4 @@ echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
 
 
-shutdown -r
+#shutdown -r now
