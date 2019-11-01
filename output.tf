@@ -10,3 +10,12 @@ Vault web interface  http://${aws_instance.vault[0].public_ip}:8200/ui
 VAULT
 
 }
+
+locals {
+  vault_db_instance_address           = element(concat(aws_db_instance.vault.*.address, aws_db_instance.vault.*.address, [""]), 0)
+}
+
+output "this_db_instance_address" {
+  description = "The address of the RDS instance"
+  value       = local.vault_db_instance_address
+}
