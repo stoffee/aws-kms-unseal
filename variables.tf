@@ -19,7 +19,7 @@ variable "vpc_cidr" {
 variable "postgres_cidr" {
   type        = string
   description = "CIDR of the VPC"
-  default     = "192.168.0.0/24"
+  default     = "10.0.1.0/24"
 }
 
 variable "db_address" {
