@@ -27,7 +27,6 @@ resource "aws_instance" "vault" {
   instance_type = "t2.medium"
   count         = 1
   subnet_id     = aws_subnet.public_subnet.id
-#  key_name      = "${var.namespace}-${random_pet.env.id}"
   key_name      = "cdunlap-aws"
 
   security_groups = [
