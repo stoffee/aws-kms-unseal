@@ -306,8 +306,7 @@ systemctl status nginx >> /opt/vault/setup/bootstrap_config.log
 ##
 
 #DB_ADDRESS=$TF_VAR_db_address
-echo db_address >> /opt/vault/setup/bootstrap_config.log
-echo "the OUTPUT of the DB_ADDRESS" >> /opt/vault/setup/bootstrap_config.log
+echo "the OUTPUT of the DB_ADDRESS is ${db_address}" >> /opt/vault/setup/bootstrap_config.log
 
 vault login $ROOT_TOKEN
 
@@ -320,7 +319,7 @@ vault write database/config/my-postgresql-database \
     password="!4me2know!" >> /opt/vault/setup/bootstrap_config.log
 
 vault write database/roles/my-role \
-    db_name=my-postgresql-database \
+    db_name=proddb \
     creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
         GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
     default_ttl="1h" \
@@ -329,3 +328,9 @@ vault write database/roles/my-role \
 
 
 echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
+
+
+
+
+
+shutdown -r
