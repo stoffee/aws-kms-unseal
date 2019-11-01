@@ -305,13 +305,15 @@ systemctl status nginx >> /opt/vault/setup/bootstrap_config.log
 ###
 ##
 
+DB_ADDRESS="${db_address}"
+
 vault login $ROOT_TOKEN
 
 vault secrets enable database
 vault write database/config/my-postgresql-database \
     plugin_name=postgresql-database-plugin \
     allowed_roles="my-role" \
-    connection_url="postgresql://{{username}}:{{password}}@${db_address}:5432/" \
+    connection_url="postgresql://{{username}}:{{password}}@$${DB_ADDRESS}:5432/" \
     username="stoffee" \
     password="!4me2know!" >> /opt/vault/setup/bootstrap_config.log
 
