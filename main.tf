@@ -49,7 +49,7 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_subnet" "postgres" {
-  vpc_id                  = aws_vpc.postgres.id
+  vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.postgres_cidr
   availability_zone       = var.aws_zone
   map_public_ip_on_launch = true
