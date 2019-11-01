@@ -10,7 +10,3 @@ resource "aws_db_instance" "default" {
   publicly_accessible  = true
   skip_final_snapshot  = true
 }
-
-#data "aws_db_instance" "default" {
-#  db_address = data.aws_db_instance.default.address
-#}
