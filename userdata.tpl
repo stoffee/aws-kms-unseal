@@ -321,7 +321,7 @@ vault write database/config/proddb \
     plugin_name=postgresql-database-plugin \
     allowed_roles="admin-role" \
     connection_url="postgresql://{{username}}:{{password}}@${db_address}:5432/" \
-    username="dbadmin" \
+    username="dbaccount" \
     password="!4me2know!" >> /opt/vault/setup/bootstrap_config.log
 
 vault write database/roles/admin-role \
