@@ -49,17 +49,16 @@ resource "aws_subnet" "public_subnet" {
   }
 }
 
-# removing for postgres branch
-#resource "aws_subnet" "postgres" {
-#  vpc_id                  = aws_vpc.postgres.id
-#  cidr_block              = var.postgres_cidr
-#  availability_zone       = var.aws_zone-2
-#  map_public_ip_on_launch = true
-#
-#  tags = {
-#    Name = "${var.namespace}-postgres-${random_pet.env.id}"
-#  }
-#}
+resource "aws_subnet" "postgres" {
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = var.postgres_cidr
+  availability_zone       = var.aws_zone-2
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "${var.namespace}-postgres-${random_pet.env.id}"
+  }
+}
 
 resource "aws_route_table" "route" {
   vpc_id = aws_vpc.vpc.id

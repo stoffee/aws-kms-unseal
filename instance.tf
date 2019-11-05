@@ -113,3 +113,28 @@ resource "aws_security_group" "vault" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_security_group" "postgres" {
+  name = "${var.namespace}-${random_pet.env.id}"
+  description = "postgres access"
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name = "${var.namespace}-${random_pet.env.id}"
+  }
+
+  # POSTGRES
+  ingress {
+    from_port = 5432
+    to_port = 5432
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
