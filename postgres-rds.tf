@@ -1,12 +1,11 @@
-# removing for postgres branch
-# resource "aws_db_subnet_group" "postgres" {
-#  name       = "main"
-#  subnet_ids = ["${aws_subnet.public_subnet.id}", "${aws_subnet.postgres.id}"]
-#
-#  tags = {
-#    Name = "Postgres DB subnet group"
-#  }
-#}
+ resource "aws_db_subnet_group" "postgres" {
+  name       = "main"
+  subnet_ids = ["${aws_subnet.public_subnet.id}", "${aws_subnet.postgres.id}"]
+
+  tags = {
+    Name = "Postgres DB subnet group"
+  }
+}
 
 resource "aws_db_instance" "default" {
   allocated_storage    = 20
