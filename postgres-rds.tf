@@ -19,7 +19,8 @@ resource "aws_db_instance" "default" {
   password             = "!4me2know!"
   publicly_accessible  = true
   skip_final_snapshot  = true
-# removing for postgres branch
-#  vpc_security_group_ids = [aws_security_group.vault.id]
+# iam_database_authentication_enabled = true
+  create_db_subnet_group = true
+  vpc_security_group_ids = [aws_security_group.vault.id]
 #  db_subnet_group_name = aws_db_subnet_group.postgres.id
 }
