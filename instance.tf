@@ -66,7 +66,7 @@ data "template_file" "format_ssh" {
 
 
 resource "aws_security_group" "vault" {
-  name = "${var.namespace}-${random_pet.env.id}"
+  name = "${var.namespace}-vault-${random_pet.env.id}"
   description = "vault access"
   vpc_id = aws_vpc.vpc.id
 
@@ -115,7 +115,7 @@ resource "aws_security_group" "vault" {
 }
 
 resource "aws_security_group" "postgres" {
-  name = "${var.namespace}-${random_pet.env.id}"
+  name = "${var.namespace}-postgres-${random_pet.env.id}"
   description = "postgres access"
   vpc_id = aws_vpc.vpc.id
 

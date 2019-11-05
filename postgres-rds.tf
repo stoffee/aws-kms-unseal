@@ -18,6 +18,6 @@ resource "aws_db_instance" "default" {
   password             = "!4me2know!"
   publicly_accessible  = true
   skip_final_snapshot  = true
-  vpc_security_group_ids = [aws_security_group.vault.id]
+  vpc_security_group_ids = [aws_security_group.vault.id, aws_security_group.postgres.id ]
 #  db_subnet_group_name = aws_db_subnet_group.postgres.id
 }
