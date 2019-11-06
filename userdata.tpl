@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 apt update
-apt-get install -y unzip nginx jq
+apt-get install -y unzip nginx jq postgresql-client-common
 # apt-get install -y libtool libltdl-dev 
 
 USER="vault"
