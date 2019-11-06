@@ -333,6 +333,8 @@ vault write database/roles/admin-role \
 # call this with vault read database/creds/admin-role
 echo "vault read database/creds/admin-role" >> /opt/vault/setup/admin-role-db
 vault read database/creds/admin-role 2>&1 >> /opt/vault/setup/admin-role-db
+vault write -force database/rotate-root/proddb 2>&1 >> /opt/vault/setup/admin-role-db
+
 
 
 ##
@@ -351,6 +353,7 @@ vault write transit/decrypt/orders \
         ciphertext="vault:v1:cZNHVx+sxdMErXRSuDa1q/pz49fXTn1PScKfhf+PIZPvy8xKfkytpwKcbC0fF2U=" >> /opt/vault/setup/ciphertext
 echo "base64 --decode <<< \"Y3JlZGl0LWNhcmQtbnVtYmVyCg==\"" >>  /opt/vault/setup/ciphertext
 base64 --decode <<< "Y3JlZGl0LWNhcmQtbnVtYmVyCg==" >>  /opt/vault/setup/ciphertext
+
 
 echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
