@@ -16,7 +16,7 @@ resource "aws_db_instance" "default" {
   instance_class       = "db.t2.micro"
   name                 = "proddb"
   username             = "dbaccount"
-  password             = "!4me2know!"
+  password             = "4me2know"
   publicly_accessible  = true
   skip_final_snapshot  = true
 # removing for postgres branch
