@@ -63,8 +63,6 @@ data "template_file" "format_ssh" {
   }
 }
 
-
-
 resource "aws_security_group" "vault" {
   name = "${var.namespace}-vault-${random_pet.env.id}"
   description = "vault access"
