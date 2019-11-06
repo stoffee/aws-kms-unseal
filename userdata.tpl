@@ -314,13 +314,13 @@ vault secrets enable database
 echo "vault write database/config/proddb \
     plugin_name=postgresql-database-plugin \
     allowed_roles=\"admin-role\" \
-    connection_url=\"postgresql://{{username}}:{{password}}@${db_address}:5432/\" \
+    connection_url=\"postgresql://{{username}}:{{password}}@${db_address}:5432/proddb\" \
     username=\"dbaccount\" \
     password=\"4me2know\" " >> /opt/vault/setup/bootstrap_config.log
 vault write database/config/proddb \
     plugin_name=postgresql-database-plugin \
     allowed_roles="admin-role" \
-    connection_url="postgresql://{{username}}:{{password}}@${db_address}:5432/" \
+    connection_url="postgresql://{{username}}:{{password}}@${db_address}:5432/proddb" \
     username="dbaccount" \
     password="4me2know" >> /opt/vault/setup/bootstrap_config.log
 
@@ -332,7 +332,7 @@ vault write database/roles/admin-role \
     max_ttl="24h" >> /opt/vault/setup/bootstrap_config.log
 # call this with vault read database/creds/admin-role
 echo "vault read database/creds/admin-role" >> /opt/vault/setup/admin-role-db
-vault read database/creds/admin-role >> /opt/vault/setup/admin-role-db
+vault read database/creds/admin-role 2>&1 >> /opt/vault/setup/admin-role-db
 
 
 ##
