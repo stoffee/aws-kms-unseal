@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
 apt update
-apt -y upgrade
-apt-add-repository -y -u ppa:zanchey/asciinema
-apt install -y unzip nginx jq postgresql-client-common asciinema
-# apt-get install -y libtool libltdl-dev 
+apt install -y unzip nginx jq postgresql-client-common
 
 USER="vault"
 COMMENT="Hashicorp Vault user"
@@ -76,15 +73,6 @@ chown vault:vault /usr/local/bin/vault
 mkdir -pm 0755 /etc/vault.d
 mkdir -pm 0755 /opt/vault
 chown vault:vault /opt/vault
-
-#
-##
-### start capture
-##
-#
-locale > /opt/vault/setup/bootstrap_config.log
-TERM=xterm HOME=/opt/vault LANG=en_US.UTF-8 asciinema rec -t "Vault Demo 1-robot dry run" /opt/vault/dryrun.cast -i 2.5 -y
-
 
 cat << EOF > /lib/systemd/system/vault.service
 [Unit]
