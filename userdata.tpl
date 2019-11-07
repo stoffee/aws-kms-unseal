@@ -80,7 +80,7 @@ chown vault:vault /opt/vault
 ### start capture
 ##
 #
-asciinema rec -t "Vault Demo 1-robot dry run" -I 2.5 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/bootstrap_config.log
+asciinema rec -t "Vault Demo 1-robot dry run" /opt/vault/setup/vault.dryrun.cast -I 2.5 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/bootstrap_config.log
 
 
 cat << EOF > /lib/systemd/system/vault.service
@@ -372,6 +372,6 @@ echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
 
 
-
 exit
+
 shutdown -r now
