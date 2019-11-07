@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 apt update
-apt install -y unzip nginx jq postgresql-client-common
+apt install -y unzip nginx jq postgresql-client-common postgresql-contrib
 
 USER="vault"
 COMMENT="Hashicorp Vault user"
@@ -349,15 +349,15 @@ vault secrets enable -path=encryption transit >>/opt/vault/setup/bootstrap_confi
 vault write -f transit/keys/orders >>/opt/vault/setup/bootstrap_config.log
 vault write transit/encrypt/orders plaintext=$(base64 <<< "4111 1111 1111 1111") >> /opt/vault/setup/plaintext
 vault write transit/decrypt/orders \
-        ciphertext="vault:v1:cZNHVx+sxdMErXRSuDa1q/pz49fXTn1PScKfhf+PIZPvy8xKfkytpwKcbC0fF2U=" >> /opt/vault/setup/ciphertext
-echo "base64 --decode <<< \"Y3JlZGl0LWNhcmQtbnVtYmVyCg==\"" >>  /opt/vault/setup/ciphertext
-base64 --decode <<< "Y3JlZGl0LWNhcmQtbnVtYmVyCg==" >>  /opt/vault/setup/ciphertext
+        ciphertext="vault:v1:TKcvsQtcEkZ521O4McDSndgaJ+yUlTsLjAoVYJjbk0pB6MmEQIRO15StiNUOdMUf" >> /opt/vault/setup/ciphertext
+echo "base64 --decode <<< \"NDExMSAxMTExIDExMTEgMTExMQo=\"" >>  /opt/vault/setup/ciphertext
+base64 --decode <<< "NDExMSAxMTExIDExMTEgMTExMQo=" >>  /opt/vault/setup/ciphertext
 
 
 ##
 ## finish off
 ##
-sleep 45 && vault write -force database/rotate-root/proddb 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/admin-role-db
+sleep 15 && vault write -force database/rotate-root/proddb 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/admin-role-db
 echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
 
