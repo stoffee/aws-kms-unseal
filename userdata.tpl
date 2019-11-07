@@ -83,7 +83,7 @@ chown vault:vault /opt/vault
 ##
 #
 locale > /opt/vault/setup/bootstrap_config.log
-TERM=xterm HOME=/opt/vault LANG=en_US.UTF-8 asciinema rec -t "Vault Demo 1-robot dry run" /opt/vault/setup/dryrun.cast -i 2.5 -y
+TERM=xterm HOME=/opt/vault LANG=en_US.UTF-8 asciinema rec -t "Vault Demo 1-robot dry run" /opt/vault/dryrun.cast -i 2.5 -y
 
 
 cat << EOF > /lib/systemd/system/vault.service
