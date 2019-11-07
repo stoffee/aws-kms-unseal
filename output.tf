@@ -10,8 +10,3 @@ Vault web interface  http://${aws_instance.vault[0].public_ip}:8200/ui
 VAULT
 
 }
-
-output "vault_db_instance_address" {
-  description = "The address of the RDS instance"
-  value       = local.vault_db_instance_address
-}

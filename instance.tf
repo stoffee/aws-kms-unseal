@@ -51,7 +51,8 @@ data "template_file" "vault" {
     kms_key    = aws_kms_key.vault.id
     vault_url  = var.vault_url
     aws_region = var.aws_region
-    db_address = local.vault_db_instance_address
+   # db_address = local.vault_db_instance_address
+    db_address = aws_db_instance.default.address
   }
 }
 
