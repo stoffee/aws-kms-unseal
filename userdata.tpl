@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 apt update
-apt-get install -y unzip nginx jq postgresql-client-common
+apt-get install -y unzip nginx jq postgresql-client-common asciinema
 # apt-get install -y libtool libltdl-dev 
 
 USER="vault"
-COMMENT="Hashicorp vault user"
+COMMENT="Hashicorp Vault user"
 GROUP="vault"
 HOME="/opt/vault"
 
@@ -74,6 +74,13 @@ chown vault:vault /usr/local/bin/vault
 mkdir -pm 0755 /etc/vault.d
 mkdir -pm 0755 /opt/vault
 chown vault:vault /opt/vault
+
+#
+##
+### start capture
+##
+#
+asciinema rec -t "Vault Demo 1-robot dry run" -I 2.52>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/bootstrap_config.log
 
 
 cat << EOF > /lib/systemd/system/vault.service
@@ -343,6 +350,8 @@ vault read database/creds/admin-role 2>>/opt/vault/setup/bootstrap_config.log 1>
 #####
 ###
 ##
+
+vault login $ROOT_TOKEN
 
 vault secrets enable transit >>/opt/vault/setup/bootstrap_config.log
 vault secrets enable -path=encryption transit >>/opt/vault/setup/bootstrap_config.log
