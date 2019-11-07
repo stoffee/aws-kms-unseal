@@ -137,7 +137,7 @@ ROOT_TOKEN=`cat /opt/vault/setup/vault.unseal.info |grep Root|awk '{print $4}'`
 vault login $ROOT_TOKEN >> /opt/vault/setup/bootstrap_config.log
 vault secrets enable transit >> /opt/vault/setup/bootstrap_config.log
 vault secrets enable -path=encryption transit >> /opt/vault/setup/bootstrap_config.log
-vault vault write -f transit/keys/orders >> /opt/vault/setup/bootstrap_config.log
+vault write -f transit/keys/orders >> /opt/vault/setup/bootstrap_config.log
 
 
 wget https://releases.hashicorp.com/consul-template/0.22.0/consul-template_0.22.0_linux_amd64.tgz >> /opt/vault/setup/bootstrap_config.log
