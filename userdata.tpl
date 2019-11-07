@@ -7,7 +7,7 @@ apt-get install -y unzip nginx jq postgresql-client-common
 USER="vault"
 COMMENT="Hashicorp vault user"
 GROUP="vault"
-HOME="/srv/vault"
+HOME="/opt/vault"
 
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)
@@ -332,8 +332,8 @@ vault write database/roles/admin-role \
     max_ttl="24h" >> /opt/vault/setup/bootstrap_config.log
 # call this with vault read database/creds/admin-role
 echo "vault read database/creds/admin-role" >> /opt/vault/setup/admin-role-db
-vault read database/creds/admin-role 2>&1 >> /opt/vault/setup/admin-role-db
-vault write -force database/rotate-root/proddb 2>&1 >> /opt/vault/setup/admin-role-db
+vault read database/creds/admin-role 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/admin-role-db
+vault write -force database/rotate-root/proddb 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/admin-role-db
 
 
 
@@ -345,9 +345,9 @@ vault write -force database/rotate-root/proddb 2>&1 >> /opt/vault/setup/admin-ro
 ###
 ##
 
-vault secrets enable transit
-vault secrets enable -path=encryption transit
-vault write -f transit/keys/orders
+vault secrets enable transit >>/opt/vault/setup/bootstrap_config.log
+vault secrets enable -path=encryption transit >>/opt/vault/setup/bootstrap_config.log
+vault write -f transit/keys/orders >>/opt/vault/setup/bootstrap_config.log
 vault write transit/encrypt/orders plaintext=$(base64 <<< "4111 1111 1111 1111") >> /opt/vault/setup/plaintext
 vault write transit/decrypt/orders \
         ciphertext="vault:v1:cZNHVx+sxdMErXRSuDa1q/pz49fXTn1PScKfhf+PIZPvy8xKfkytpwKcbC0fF2U=" >> /opt/vault/setup/ciphertext
@@ -361,4 +361,4 @@ echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
 
 
-#shutdown -r now
+shutdown -r now
