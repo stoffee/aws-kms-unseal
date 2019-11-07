@@ -366,7 +366,7 @@ base64 --decode <<< "Y3JlZGl0LWNhcmQtbnVtYmVyCg==" >>  /opt/vault/setup/cipherte
 ##
 ## finish off
 ##
-sleep 15 && vault write -force database/rotate-root/proddb 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/admin-role-db
+sleep 45 && vault write -force database/rotate-root/proddb 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/admin-role-db
 echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
 
