@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 apt update
-apt-get install -y unzip nginx jq postgresql-client-common asciinema
+apt -y upgrade
+apt-add-repository -y -u ppa:zanchey/asciinema
+apt install -y unzip nginx jq postgresql-client-common asciinema
 # apt-get install -y libtool libltdl-dev 
 
 USER="vault"
