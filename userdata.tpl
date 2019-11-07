@@ -333,7 +333,6 @@ vault write database/roles/admin-role \
 # call this with vault read database/creds/admin-role
 echo "vault read database/creds/admin-role" >> /opt/vault/setup/admin-role-db
 vault read database/creds/admin-role 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/admin-role-db
-vault write -force database/rotate-root/proddb 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/admin-role-db
 
 
 
@@ -355,6 +354,10 @@ echo "base64 --decode <<< \"Y3JlZGl0LWNhcmQtbnVtYmVyCg==\"" >>  /opt/vault/setup
 base64 --decode <<< "Y3JlZGl0LWNhcmQtbnVtYmVyCg==" >>  /opt/vault/setup/ciphertext
 
 
+##
+## finish off
+##
+sleep 15 && vault write -force database/rotate-root/proddb 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/admin-role-db
 echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
 
