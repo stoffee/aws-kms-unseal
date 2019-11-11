@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 apt update
-apt install -y unzip nginx jq postgresql-client-common #postgresql-contrib
+apt install -y unzip nginx jq postgresql-client #postgresql-contrib
 
 USER="vault"
 COMMENT="Hashicorp Vault user"
