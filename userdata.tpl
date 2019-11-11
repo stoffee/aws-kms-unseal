@@ -97,7 +97,7 @@ EOF
 
 cat << EOF > /etc/vault.d/vault.hcl
 storage "postgresql" {
-  connection_url = "postgres://vaultdbadmin:4me2know@${db_address}:5432/vault"
+  connection_url = "postgres://vaultdbadmin:4me2know@${vault_db_address}:5432/vault"
 }
 listener "tcp" {
   address     = "0.0.0.0:8200"
