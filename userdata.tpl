@@ -73,8 +73,9 @@ chown vault:vault /usr/local/bin/vault
 ln -s /usr/local/bin/vault /usr/bin/vault
 mkdir -pm 0755 /etc/vault.d
 mkdir -pm 0755 /opt/vault/setup
-chown -r vault:vault /opt/vault
-chown -r vault:vault /etc/vault.d
+chown -R vault:vault /opt/vault
+chown -R vault:vault /etc/vault.d
+touch /opt/vault/setup/vault.unseal.info /opt/vault/setup/bootstrap_config.log
 
 cat << EOF > /lib/systemd/system/vault.service
 [Unit]
@@ -121,7 +122,7 @@ CREATE TABLE vault_kv_store (
 CREATE INDEX parent_path_idx ON vault_kv_store (parent_path);
 EOF
 
-psql -U vaultdbadmin -d vault -f /opt/vault/vault_create.sql
+PGPASSWORD=4me2know psql -U vaultdbadmin -d vault -f /opt/vault/vault_create.sql
 
 chmod 0664 /lib/systemd/system/vault.service
 systemctl daemon-reload
@@ -138,10 +139,6 @@ echo "source /etc/profile.d/vault.sh" >> ~ubuntu/.bashrc
 
 systemctl enable vault
 systemctl start vault
-
-sleep 10
-
-touch /opt/vault/setup/vault.unseal.info /opt/vault/setup/bootstrap_config.log
 
 vault operator init -recovery-shares=1 -recovery-threshold=1 >> /opt/vault/setup/vault.unseal.info
 ROOT_TOKEN=`cat /opt/vault/setup/vault.unseal.info |grep Root|awk '{print $4}'`
