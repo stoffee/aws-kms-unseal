@@ -22,7 +22,12 @@ variable "vpc_cidr" {
 
 variable "db_address" {
   description = "address of the DB server"
-  default = "aws_db_instance_default.address"
+  default = "aws_db_instance.proddb.address"
+}
+
+variable "vault_db_address" {
+  description = "address of the vault DB server"
+  default = "aws_db_instance.vault.address"
 }
 
 variable "namespace" {
