@@ -8,7 +8,6 @@ output "vault_db_instance_address" {
   value       = "${aws_db_instance.vault.address}"
 }
 
-}
 output "connections" {
   value = <<VAULT
 Connect to Vault via SSH   ssh -i private.key ubuntu@${aws_instance.vault[0].public_ip}
