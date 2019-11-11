@@ -139,6 +139,7 @@ echo "source /etc/profile.d/vault.sh" >> ~ubuntu/.bashrc
 
 systemctl enable vault
 systemctl start vault
+sleep 12
 
 vault operator init -recovery-shares=1 -recovery-threshold=1 >> /opt/vault/setup/vault.unseal.info
 ROOT_TOKEN=`cat /opt/vault/setup/vault.unseal.info |grep Root|awk '{print $4}'`
