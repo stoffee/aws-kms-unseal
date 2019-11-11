@@ -52,7 +52,7 @@ data "template_file" "vault" {
     vault_url  = var.vault_url
     aws_region = var.aws_region
    # db_address = local.vault_db_instance_address
-    db_address = aws_db_instance.default.address
+    db_address = aws_db_instance.proddb.address
   }
 }
 

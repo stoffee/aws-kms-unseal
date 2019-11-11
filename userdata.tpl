@@ -94,8 +94,8 @@ EOF
 
 
 cat << EOF > /etc/vault.d/vault.hcl
-storage "file" {
-  path = "/opt/vault"
+storage "postgresql" {
+  connection_url = "postgres://vaultdbadmin:4me2know@${db_address}:5432/vault"
 }
 listener "tcp" {
   address     = "0.0.0.0:8200"
@@ -108,6 +108,19 @@ seal "awskms" {
 ui=true
 EOF
 
+cat << EOF >  /opt/vault/setup/vault_create.sql
+CREATE TABLE vault_kv_store (
+  parent_path TEXT COLLATE "C" NOT NULL,
+  path        TEXT COLLATE "C",
+  key         TEXT COLLATE "C",
+  value       BYTEA,
+  CONSTRAINT pkey PRIMARY KEY (path, key)
+);
+
+CREATE INDEX parent_path_idx ON vault_kv_store (parent_path);
+EOF
+
+psql -U vaultdbadmin -d vault -f /opt/vault/setup/vault_create.sql
 
 chmod 0664 /lib/systemd/system/vault.service
 systemctl daemon-reload
@@ -120,6 +133,7 @@ export VAULT_SKIP_VERIFY=true
 EOF
 
 source /etc/profile.d/vault.sh
+echo "source /etc/profile.d/vault.sh" >> ~ubuntu/.bashrc
 
 systemctl enable vault
 systemctl start vault
@@ -362,7 +376,4 @@ echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
 
 
-
-exit
-
-shutdown -r now
+#shutdown -r now

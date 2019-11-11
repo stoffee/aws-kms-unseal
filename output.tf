@@ -1,6 +1,6 @@
 output "this_db_instance_address" {
   description = "The address of the RDS instance"
-  value       = "${aws_db_instance.default.address}"
+  value       = "${aws_db_instance.proddb.address}"
 }
 
 output "connections" {
