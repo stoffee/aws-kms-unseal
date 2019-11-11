@@ -71,8 +71,8 @@ unzip -o /tmp/$${VAULT_ZIP} -d /usr/local/bin/
 chmod 0755 /usr/local/bin/vault
 chown vault:vault /usr/local/bin/vault
 mkdir -pm 0755 /etc/vault.d
-mkdir -pm 0755 /opt/vault
-chown vault:vault /opt/vault
+mkdir -pm 0755 /opt/vault/setup
+chown -r vault:vault /opt/vault
 
 cat << EOF > /lib/systemd/system/vault.service
 [Unit]
