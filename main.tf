@@ -7,26 +7,14 @@ resource "random_pet" "env" {
   separator = "-"
 }
 
-# removing for postgres branch
-#resource "aws_vpc" "postgres" {
-#  cidr_block           = var.postgres_cidr
-#  enable_dns_hostnames = true
-#
-#  tags = {
-#    Name = "${var.namespace}-${random_pet.env.id}"
-#    Owner = "cdunlap"
-#    TTL = "48"
-#  }
-#}
-
 resource "aws_vpc" "vpc" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
 
   tags = {
-    Name = "${var.namespace}-${random_pet.env.id}"
+    Name  = "${var.namespace}-${random_pet.env.id}"
     Owner = "cdunlap"
-    TTL = "48"
+    TTL   = "48"
   }
 }
 
@@ -48,18 +36,6 @@ resource "aws_subnet" "public_subnet" {
     Name = "${var.namespace}-pub-${random_pet.env.id}"
   }
 }
-
-# removing for postgres branch
-#resource "aws_subnet" "postgres" {
-#  vpc_id                  = aws_vpc.postgres.id
-#  cidr_block              = var.postgres_cidr
-#  availability_zone       = var.aws_zone-2
-#  map_public_ip_on_launch = true
-#
-#  tags = {
-#    Name = "${var.namespace}-postgres-${random_pet.env.id}"
-#  }
-#}
 
 resource "aws_route_table" "route" {
   vpc_id = aws_vpc.vpc.id

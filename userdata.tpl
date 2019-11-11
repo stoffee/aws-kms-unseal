@@ -108,7 +108,7 @@ seal "awskms" {
 ui=true
 EOF
 
-cat << EOF >  /opt/vault/setup/vault_create.sql
+cat << EOF > /opt/vault/setup/vault_create.sql
 CREATE TABLE vault_kv_store (
   parent_path TEXT COLLATE "C" NOT NULL,
   path        TEXT COLLATE "C",
@@ -116,7 +116,6 @@ CREATE TABLE vault_kv_store (
   value       BYTEA,
   CONSTRAINT pkey PRIMARY KEY (path, key)
 );
-
 CREATE INDEX parent_path_idx ON vault_kv_store (parent_path);
 EOF
 
@@ -316,9 +315,6 @@ systemctl status nginx >> /opt/vault/setup/bootstrap_config.log
 #####
 ###
 ##
-
-#DB_ADDRESS=$TF_VAR_db_address
-echo "the OUTPUT of the DB_ADDRESS is ${db_address}" >> /opt/vault/setup/bootstrap_config.log
 
 vault login $ROOT_TOKEN
 
