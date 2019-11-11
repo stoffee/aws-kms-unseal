@@ -51,7 +51,7 @@ data "template_file" "vault" {
     kms_key    = aws_kms_key.vault.id
     vault_url  = var.vault_url
     aws_region = var.aws_region
-   # db_address = local.vault_db_instance_address
+    # db_address = local.vault_db_instance_address
     db_address = aws_db_instance.proddb.address
   }
 }
@@ -67,9 +67,9 @@ data "template_file" "format_ssh" {
 
 
 resource "aws_security_group" "vault" {
-  name = "${var.namespace}-${random_pet.env.id}"
+  name        = "${var.namespace}-${random_pet.env.id}"
   description = "vault access"
-  vpc_id = aws_vpc.vpc.id
+  vpc_id      = aws_vpc.vpc.id
 
   tags = {
     Name = "${var.namespace}-${random_pet.env.id}"
@@ -77,40 +77,40 @@ resource "aws_security_group" "vault" {
 
   # SSH
   ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   # NGINX
   ingress {
-    from_port = 443
-    to_port = 443
-    protocol = "tcp"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   # POSTGRES
   ingress {
-    from_port = 5432
-    to_port = 5432
-    protocol = "tcp"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   # Vault Client Traffic
   ingress {
-    from_port = 8200
-    to_port = 8200
-    protocol = "tcp"
+    from_port   = 8200
+    to_port     = 8200
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
