@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 apt update
-apt install -y unzip nginx jq postgresql-client-common postgresql-contrib
+apt install -y unzip nginx jq postgresql-client-common #postgresql-contrib
 
 USER="vault"
 COMMENT="Hashicorp Vault user"
@@ -122,7 +122,7 @@ CREATE TABLE vault_kv_store (
 CREATE INDEX parent_path_idx ON vault_kv_store (parent_path);
 EOF
 
-PGPASSWORD=4me2know psql -U vaultdbadmin -d vault -f /opt/vault/vault_create.sql
+PGPASSWORD=4me2know psql -h ${vault_db_address} -U vaultdbadmin -d vault -f /opt/vault/vault_create.sql
 
 chmod 0664 /lib/systemd/system/vault.service
 systemctl daemon-reload
