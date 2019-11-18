@@ -356,8 +356,9 @@ vault secrets enable transit >>/opt/vault/setup/bootstrap_config.log
 vault secrets enable -path=encryption transit >>/opt/vault/setup/bootstrap_config.log
 vault write -f transit/keys/orders >>/opt/vault/setup/bootstrap_config.log
 vault write transit/encrypt/orders plaintext=$(base64 <<< "4111 1111 1111 1111") >> /opt/vault/setup/plaintext
+CIPHERTEXT=`sed -n 3p /opt/vault/setup/plaintext |awk '{print $2}'`
 vault write transit/decrypt/orders \
-        ciphertext="vault:v1:TKcvsQtcEkZ521O4McDSndgaJ+yUlTsLjAoVYJjbk0pB6MmEQIRO15StiNUOdMUf" >> /opt/vault/setup/ciphertext
+        ciphertext="$CIPHERTEXT" >> /opt/vault/setup/ciphertext
 echo "base64 --decode <<< \"NDExMSAxMTExIDExMTEgMTExMQo=\"" >>  /opt/vault/setup/ciphertext
 base64 --decode <<< "NDExMSAxMTExIDExMTEgMTExMQo=" >>  /opt/vault/setup/ciphertext
 
