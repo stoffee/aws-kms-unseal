@@ -321,14 +321,14 @@ echo "vault write database/config/proddb \
     plugin_name=postgresql-database-plugin \
     allowed_roles=\"admin-role\" \
     connection_url=\"postgresql://{{username}}:{{password}}@${db_address}:5432/proddb\" \
-    username=\"dbaccount\" \
-    password=\"4me2know\" " >> /opt/vault/setup/bootstrap_config.log
+    username=\"${proddb_username}\" \
+    password=\"${proddb_password}\" " >> /opt/vault/setup/bootstrap_config.log
 vault write database/config/proddb \
     plugin_name=postgresql-database-plugin \
     allowed_roles="admin-role" \
     connection_url="postgresql://{{username}}:{{password}}@${db_address}:5432/proddb" \
-    username="dbaccount" \
-    password="4me2know" >> /opt/vault/setup/bootstrap_config.log
+    username="${proddb_username}" \
+    password="${proddb_password}" >> /opt/vault/setup/bootstrap_config.log
 
 vault write database/roles/admin-role \
     db_name=proddb \

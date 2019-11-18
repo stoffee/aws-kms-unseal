@@ -34,3 +34,19 @@ variable "namespace" {
   description = "Prepended name of all resources"
   default     = "aws-vault"
 }
+
+variable "proddb_username" {
+  default = "dbaccount"
+}
+
+variable "proddb_password" {
+  default = "UseHashiCorpVault"
+}
+
+variable "vaultdb_username" {
+  default = "vaultdbadmin"
+}
+
+variable "vaultdb_password" {
+  default = "UseHashiCorpVault"
+}

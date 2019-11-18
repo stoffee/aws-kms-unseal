@@ -5,8 +5,8 @@ resource "aws_db_instance" "proddb" {
   engine_version      = "11.5"
   instance_class      = "db.t2.micro"
   name                = "proddb"
-  username            = "dbaccount"
-  password            = "4me2know"
+  username            = var.proddb_username
+  password            = var.proddb_password
   publicly_accessible = true
   skip_final_snapshot = true
   tags = {
@@ -22,8 +22,8 @@ resource "aws_db_instance" "vault" {
   engine_version      = "11.5"
   instance_class      = "db.t2.micro"
   name                = "vault"
-  username            = "vaultdbadmin"
-  password            = "4me2know"
+  username            = var.vaultdb_username
+  password            = var.vaultdb_password
   publicly_accessible = true
   skip_final_snapshot = true
   tags = {
