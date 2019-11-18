@@ -53,6 +53,10 @@ data "template_file" "vault" {
     aws_region = var.aws_region
     vault_db_address = aws_db_instance.vault.address
     db_address = aws_db_instance.proddb.address
+    proddb_username = var.proddb_username
+    proddb_password = var.proddb_password
+    vaultdb_username = var.vaultdb_username
+    vaultdb_password = var.vaultdb_password
   }
 }
 

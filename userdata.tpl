@@ -98,7 +98,7 @@ EOF
 
 cat << EOF > /etc/vault.d/vault.hcl
 storage "postgresql" {
-  connection_url = "postgres://vaultdbadmin:4me2know@${vault_db_address}:5432/vault"
+  connection_url = "postgres://${vaultdb_username}:${vaultdb_password}@${vault_db_address}:5432/vault"
 }
 listener "tcp" {
   address     = "0.0.0.0:8200"
@@ -122,7 +122,7 @@ CREATE TABLE vault_kv_store (
 CREATE INDEX parent_path_idx ON vault_kv_store (parent_path);
 EOF
 
-PGPASSWORD=4me2know psql -h ${vault_db_address} -U vaultdbadmin -d vault -f /opt/vault/vault_create.sql
+PGPASSWORD=${vaultdb_password} psql -h ${vault_db_address} -U ${vaultdb_username} -d vault -f /opt/vault/vault_create.sql
 
 chmod 0664 /lib/systemd/system/vault.service
 systemctl daemon-reload
