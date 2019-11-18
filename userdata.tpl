@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 apt update
-apt install -y unzip nginx jq postgresql-client #postgresql-contrib
+apt install -y unzip nginx jq postgresql-client
 
 USER="vault"
 COMMENT="Hashicorp Vault user"
@@ -371,4 +371,4 @@ echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
 
 
-#shutdown -r now
+shutdown -r now
