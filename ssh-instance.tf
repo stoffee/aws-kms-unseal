@@ -29,10 +29,10 @@ data "template_file" "ssh" {
   }
 }
 
-data "template_file" "format_ssh" {
-  template = "connect to host with following command: ssh ubuntu@$${admin} -i private.key"
-
-  vars = {
-    admin = aws_instance.ssh[0].public_ip
-  }
-}
+#data "template_file" "format_ssh" {
+#  template = "connect to host with following command: ssh ubuntu@$${admin} -i private.key"
+#
+#  vars = {
+#    admin = aws_instance.ssh[0].public_ip
+#  }
+#}
