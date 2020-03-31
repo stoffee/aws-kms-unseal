@@ -14,7 +14,7 @@ resource "aws_vpc" "vpc" {
   tags = {
     Name  = "${var.namespace}-${random_pet.env.id}"
     Owner = "cdunlap"
-    TTL   = "48"
+    TTL   = "96"
   }
 }
 
