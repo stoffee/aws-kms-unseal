@@ -14,7 +14,7 @@ resource "aws_instance" "ssh" {
   iam_instance_profile        = aws_iam_instance_profile.vault-kms-unseal.id
 
   tags = {
-    Name = "${var.namespace}-${random_pet.env.id}"
+    Name = "${var.namespace}-${random_pet.env.id}-ssh"
   }
 
   user_data = data.template_file.ssh.rendered
