@@ -11,7 +11,7 @@ resource "aws_db_instance" "proddb" {
   skip_final_snapshot = true
   tags = {
     Owner = "cdunlap"
-    TTL   = "36hrs"
+    TTL   = "96"
   }
 }
 
@@ -28,6 +28,6 @@ resource "aws_db_instance" "vault" {
   skip_final_snapshot = true
   tags = {
     Owner = "cdunlap"
-    TTL   = "36hrs"
+    TTL   = "96"
   }
 }
