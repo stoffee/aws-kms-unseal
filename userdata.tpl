@@ -369,6 +369,28 @@ base64 --decode <<< "$CIPHERTEXT" >>  /opt/vault/setup/creditcard_number
 sleep 15 && vault write -force database/rotate-root/proddb 2>>/opt/vault/setup/bootstrap_config.log 1>> /opt/vault/setup/admin-role-db
 echo "All Done"  >> /opt/vault/setup/bootstrap_config.log
 
+##
+## setup ssh
+##
+vault login $ROOT_TOKEN
+vault secrets enable -path=ssh-client-signer ssh
+vault write ssh-client-signer/config/ca generate_signing_key=true
+vault write ssh-client-signer/roles/my-role -<<"EOH"
+{
+  "allow_user_certificates": true,
+  "allowed_users": "*",
+  "default_extensions": [
+    {
+      "permit-pty": ""
+    }
+  ],
+  "key_type": "ca",
+  "default_user": "ubuntu",
+  "ttl": "30m0s"
+}
+EOH
+
+
 
 
 shutdown -r now
