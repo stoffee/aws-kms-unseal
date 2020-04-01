@@ -26,6 +26,6 @@ data "template_file" "bastion" {
   vars = {
     vault_url  = var.vault_url
     aws_region = var.aws_region
-    vault_sshhost_address = var.vault_sshhost_address
+    vault_address = var.vault_address
   }
 }
