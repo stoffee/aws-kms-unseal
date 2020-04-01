@@ -1,4 +1,6 @@
-# Vault Auto-unseal using AWS KMS and RDS MYSQL database permissions & Vault CA backed SSH
+# Vault Auto-unseal using AWS KMS 
+# RDS MYSQL database permissions 
+# Vault CA backed SSH
 
 This repo contains a file storage based Vault single server in AWS.
             ** THIS IS NOT FOR PRODUCTION **
@@ -11,39 +13,35 @@ This repo contains a file storage based Vault single server in AWS.
 
 ---
 
-## Demo Steps
-
 ### Setup
 
 1. Set this location as your working directory
 1. Set your AWS credentials as environment variables: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 1. Set Vault Enterprise URL in a file named `terraform.tfvars` (see `terraform.tfvars.example`)
 
-### Deployment Commands Cheat Sheet
+### Deployment Commands
 
-```bash
-# Pull necessary plugins
-$ terraform init
+#### Pull necessary plugins
+$ `terraform init`
 
-$ terraform plan
+#### Run the terraform plan
+$ `terraform plan`
 
-# Output provides the SSH instruction
-$ terraform apply
+#### Output provides the SSH instruction
+$ `terraform apply`
 
-# Look in the output for the vault server ssh info
-# Connect to the vault, ssh, and bastion servers
-$ ssh -i private.key ubuntu@<IP_ADDRESS>
+#### Connect to the vault, ssh, and bastion servers
+* Look in the output for the vault server ssh info
+$ `ssh -i private.key ubuntu@<IP_ADDRESS>`
 
-#----------------------------------
-# Once logged in to any instance
-$ vault status
+#### Once logged in to any instance
+$ `vault status`
 
-# Check out the vault credentials and unseal key on the Vault server
-$ cat /opt/vault/setup/vault.unseal.info
+#### Check out the vault credentials and unseal key on the Vault server
+$ `cat /opt/vault/setup/vault.unseal.info`
 
-# Login on any server with the root token from above
-$ vault login <INITIAL_ROOT_TOKEN>
-```
+#### Login on any server with the root token from above
+$ `vault login <INITIAL_ROOT_TOKEN>`
 #
 ## NGINX Certs Demo
  Run the scipt `/opt/vault/nginx_demo.sh`
@@ -51,7 +49,7 @@ $ vault login <INITIAL_ROOT_TOKEN>
 ## Postgres Demo
 $ `vault login <INITIAL_ROOT_TOKEN>`<br>
 $ `vault read database/creds/admin-role`<br>
-$ `psql -h terraform-20191107214742817000000001.caotp6j0pjol.us-west-1.rds.amazonaws.com -d proddb -U`<br>
+$ `psql -h <YOUR_AMAZON_PUBILC_DNS> -d proddb -U`<br>
 ```sql
 USERNAME -W
 SELECT u.usename AS "Role name",
@@ -67,9 +65,10 @@ ORDER BY 1;
 ```
 #
 ## Transit Engine Demo
+$ `vault login`
 $ `vault write transit/encrypt/orders plaintext=$(base64 <<< "4111 1111 1111 1111")`<br>
 $ `vault write transit/decrypt/orders ciphertext=“CIPHER"`<br>
-$ `base64 -d <<< RESULTOFABOVE`
+$ `base64 -d <<< <RESULTOFABOVE>`
 #
 # Clean up...
 $ `terraform destroy -force`<br>
