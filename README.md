@@ -19,7 +19,7 @@ This repo contains a file storage based Vault single server in AWS.
 1. Set your AWS credentials as environment variables: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 1. Set Vault Enterprise URL in a file named `terraform.tfvars` (see `terraform.tfvars.example`)
 
-### Commands Cheat Sheet
+### Deployment Commands Cheat Sheet
 
 ```bash
 # Pull necessary plugins
@@ -43,20 +43,21 @@ $ cat /opt/vault/setup/vault.unseal.info
 
 # Login on any server with the root token from above
 $ vault login <INITIAL_ROOT_TOKEN>
-
+```
+### Demo Cheat Sheet
 #
 #-----------------------------------
 #
 NGINX Certs Demo
- Run the scipt /opt/vault/nginx_demo.sh
+ Run the scipt `/opt/vault/nginx_demo.sh`
 
 #
 #----------------------------------
 #
 Postgres Demo
-$ vault login <INITIAL_ROOT_TOKEN
-$ vault read database/creds/admin-role
-$ psql -h terraform-20191107214742817000000001.caotp6j0pjol.us-west-1.rds.amazonaws.com -d proddb -U
+$ `vault login <INITIAL_ROOT_TOKEN>`
+$ `vault read database/creds/admin-role`
+$ `psql -h terraform-20191107214742817000000001.caotp6j0pjol.us-west-1.rds.amazonaws.com -d proddb -U`
 ```sql
 USERNAME -W
 SELECT u.usename AS "Role name",
@@ -74,6 +75,5 @@ ORDER BY 1;
 #----------------------------------
 
 # Clean up...
-$ terraform destroy -force
-$ rm -rf .terraform terraform.tfstate* private.key
-```
+$ `terraform destroy -force`
+$ `rm -rf .terraform terraform.tfstate*`
