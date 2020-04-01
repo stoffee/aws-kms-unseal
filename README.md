@@ -1,6 +1,7 @@
-# Vault Auto-unseal using AWS KMS 
-# RDS MYSQL database permissions 
-# Vault CA backed SSH
+# Hashicorp Vault on AWS Demo
+## Vault Auto-unseal using AWS KMS 
+## RDS MYSQL database permissions 
+## Vault CA backed SSH
 
 This repo contains a file storage based Vault single server in AWS.
             ** THIS IS NOT FOR PRODUCTION **
@@ -17,7 +18,7 @@ This repo contains a file storage based Vault single server in AWS.
 
 1. Set this location as your working directory
 1. Set your AWS credentials as environment variables: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
-1. Set Vault Enterprise URL in a file named `terraform.tfvars` (see `terraform.tfvars.example`)
+1. Set option variables by renaming `terraform.tfvars.example` to `terraform.tfvars` and edit the values to your needs.
 
 ### Deployment Commands
 

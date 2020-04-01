@@ -1,0 +1,4 @@
+namespace = "my-prefix"
+vault_url = "https://releases.hashicorp.com/vault/1.3.4/vault_1.3.4_linux_amd64.zip"
+owner = "YOUR_NAME_HERE"
+ssh_key_name = "YOUR_AWS_SSH_KEY"
