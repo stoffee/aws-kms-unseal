@@ -45,6 +45,7 @@ ssh-keygen -t rsa -C "ubuntu"
 
 ----
 Ask Vault to sign the public key:
+vault login
 vault write ssh-client-signer/sign/my-role \
     public_key=@$HOME/.ssh/id_rsa.pub
 
@@ -66,17 +67,13 @@ Host bastion
   IdentityFile ~/.ssh/id_rsa
   CertificateFile ~/.ssh/signed-cert.pub
   User ubuntu
-Host 10.10.10.10
+Host ${aws_instance.ssh[0].public_dns}
   IdentityFile ~/.ssh/id_rsa
   ProxyCommand ssh -F uname bastion nc %h %p
   User ubuntu
 ----
-Add this to /etc/hosts file on the vault sever:
-10.10.10.10 ${aws_instance.ssh[0].public_dns}
-
----
 Now let's try to connect:
-ssh -i signed-cert.pub -i ~/.ssh/id_rsa ubuntu@10.10.10.10
+ssh -i signed-cert.pub -i ~/.ssh/id_rsa ubuntu@${aws_instance.ssh[0].public_dns}
 
 SSH
 }

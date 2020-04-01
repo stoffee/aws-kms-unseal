@@ -17,7 +17,7 @@ resource "aws_instance" "bastion" {
     Name = "${var.namespace}-${random_pet.env.id}-ssh"
   }
 
-  user_data = data.template_file.ssh.rendered
+  user_data = data.template_file.bastion.rendered
 }
 
 data "template_file" "bastion" {
