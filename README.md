@@ -1,6 +1,13 @@
 # Vault Auto-unseal using AWS KMS and RDS MYSQL database permissions & Vault Ca backed SSH
 
-These assets are provided to perform the tasks described in the [Vault Auto-unseal with AWS KMS](https://learn.hashicorp.com/vault/operations/ops-autounseal-aws-kms) guide.
+This repo contains a file storage based Vault single server in AWS.
+            ** THIS IS NOT FOR PRODUCTION **
+* Deply Vault with Auto Uneal 
+* * https://www.vaultproject.io/docs/concepts/seal/
+* Deploy Vault Database Secrets Engine to manage Postgres RDS instances
+* * https://www.vaultproject.io/docs/secrets/databases/postgresql/
+* Database Root Credential Password Rotation with Vault
+* * https://learn.hashicorp.com/vault/secrets-management/db-root-rotation
 
 ---
 
@@ -24,30 +31,46 @@ $ terraform plan
 $ terraform apply
 
 # Look in the output for the vault server ssh info
-# Connect to the vault server
-$ ssh ubuntu@<IP_ADDRESS> -i private.key
+# Connect to the vault, ssh, and bastion servers
+$ ssh -i private.key ubuntu@<IP_ADDRESS>
 
 #----------------------------------
-# Once inside the vault instance...
-$ export VAULT_ADDR=http://127.0.0.1:8200
-
+# Once logged in to any instance
 $ vault status
 
-# Initialize Vault
-$ vault operator init -key-shares=1 -key-threshold=1
+# Check out the vault credentials and unseal key on the Vault server
+$ cat /opt/vault/setup/vault.unseal.info
 
-# Restart the Vault server
-$ sudo systemctl restart vault
-
-# Check to verify that the Vault is auto-unsealed
-$ vault status
-
+# Login on any server with the root token from above
 $ vault login <INITIAL_ROOT_TOKEN>
 
-# Explorer the Vault configuration file
-$ cat /etc/vault.d/vault.hcl
+#
+#-----------------------------------
+#
+NGINX Certs Demo
+ Run the scipt /opt/vault/nginx_demo.sh
 
-$ exit
+#
+#----------------------------------
+#
+Postgres Demo
+$ vault login <INITIAL_ROOT_TOKEN
+$ vault read database/creds/admin-role
+$ psql -h terraform-20191107214742817000000001.caotp6j0pjol.us-west-1.rds.amazonaws.com -d proddb -U
+```sql
+USERNAME -W
+SELECT u.usename AS "Role name",
+  CASE WHEN u.usesuper AND u.usecreatedb THEN CAST('superuser, create
+database' AS pg_catalog.text)
+       WHEN u.usesuper THEN CAST('superuser' AS pg_catalog.text)
+       WHEN u.usecreatedb THEN CAST('create database' AS
+pg_catalog.text)
+       ELSE CAST('' AS pg_catalog.text)
+  END AS "Attributes"
+FROM pg_catalog.pg_user u
+ORDER BY 1;
+```
+
 #----------------------------------
 
 # Clean up...

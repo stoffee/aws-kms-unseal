@@ -45,7 +45,7 @@ resource "aws_instance" "vault" {
 }
 
 data "template_file" "vault" {
-  template = file("userdata.tpl")
+  template = file("vault.tpl")
 
   vars = {
     kms_key    = aws_kms_key.vault.id

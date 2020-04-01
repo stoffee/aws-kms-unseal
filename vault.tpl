@@ -122,12 +122,45 @@ CREATE TABLE vault_kv_store (
 CREATE INDEX parent_path_idx ON vault_kv_store (parent_path);
 EOF
 
+cat << EOT > /opt/vault/nginx_demo.sh
+echo "----------------------------------------"; \\
+echo "ls /etc/nginx/certs"; \\
+ls -ltrFa /etc/nginx/certs/|grep yet; \\
+echo "SSL Cert Info" ; \\
+sudo openssl x509 -noout -text -in /etc/nginx/certs/yet.crt |grep -E "Validity|Not|Issuer|CA Issuers" ; \\
+sleep 120 ; \\
+echo "----------------------------------------"; \\
+echo "ls /etc/nginx/certs"; \\
+ls -ltrFa /etc/nginx/certs/|grep yet; \\
+echo "SSL Cert Info" ; \\
+sudo openssl x509 -noout -text -in /etc/nginx/certs/yet.crt |grep -E "Validity|Not|Issuer|CA Issuers" ; \\
+sleep 120 ; \\
+echo "----------------------------------------"; \\
+echo "ls /etc/nginx/certs"; \\
+ls -ltrFa /etc/nginx/certs/|grep yet; \\
+echo "SSL Cert Info" ; \\
+sudo openssl x509 -noout -text -in /etc/nginx/certs/yet.crt |grep -E "Validity|Not|Issuer|CA Issuers"; \\
+sleep 120 ; \\
+echo "----------------------------------------"; \\
+echo "ls /etc/nginx/certs"; \\
+ls -ltrFa /etc/nginx/certs/|grep yet; \\
+echo "SSL Cert Info" ; \\
+sudo openssl x509 -noout -text -in /etc/nginx/certs/yet.crt |grep -E "Validity|Not|Issuer|CA Issuers" ; \\
+sleep 120 ; \\
+echo "----------------------------------------"; \\
+echo "ls /etc/nginx/certs"; \\
+ls -ltrFa /etc/nginx/certs/|grep yet; \\
+echo "SSL Cert Info" ; \\
+sudo openssl x509 -noout -text -in /etc/nginx/certs/yet.crt |grep -E "Validity|Not|Issuer|CA Issuers"
+EOT
+
 PGPASSWORD=${vaultdb_password} psql -h ${vault_db_address} -U ${vaultdb_username} -d vault -f /opt/vault/vault_create.sql
 
 chmod 0664 /lib/systemd/system/vault.service
 systemctl daemon-reload
 chown -R vault:vault /etc/vault.d
 chmod -R 0644 /etc/vault.d/*
+chmod +x /opt/vault/nginx_demo.sh
 
 cat << EOF > /etc/profile.d/vault.sh
 export VAULT_ADDR=http://127.0.0.1:8200
