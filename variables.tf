@@ -61,5 +61,5 @@ variable "owner" {
 }
 
 variable "ssh_key_name" {
-  default = "my-aws-ssh-key
+  default = "my-aws-ssh-key"
 }
