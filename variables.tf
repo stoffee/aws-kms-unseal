@@ -30,7 +30,7 @@ variable "vault_db_address" {
   default     = "aws_db_instance.vault.address"
 }
 
-variable "vault_sshhost_address" {
+variable "vault_address" {
   description = "address of the vault ssh host"
   default     = "aws_instance.vault[0].public_ip"
 }

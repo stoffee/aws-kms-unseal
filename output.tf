@@ -33,6 +33,12 @@ Update the sshd_config:
 # /etc/ssh/sshd_config
 # ...
 TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
+# Tunnel SSH connections through a single subnet
+Host bastion_shrd
+  Hostname ${aws_instance.vault[0].public_dns}
+  IdentityFile ~/.ssh/id_rsa
+  CertificateFile ~/.ssh/id_rsa-poc-cert.pub
+  User ubuntu
 ---
 Restart sshd: sudo systemctl restart sshd
 
@@ -55,5 +61,11 @@ vault write -field=signed_key ssh-client-signer/sign/my-role \
 ----
 Now ssh to the client host:
 ssh -i signed-cert.pub -i ~/.ssh/id_rsa ubuntu@${aws_instance.ssh[0].public_ip}
+
+----
+now that we can connect to the host, we want to connnect through the bastion
+----
+put this in the ssh instance 
+
 SSH
 }
