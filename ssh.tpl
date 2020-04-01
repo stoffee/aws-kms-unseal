@@ -72,10 +72,10 @@ chmod 0755 /usr/local/bin/vault
 chown vault:vault /usr/local/bin/vault
 ln -s /usr/local/bin/vault /usr/bin/vault
 
-#cat << EOF > /etc/profile.d/vault.sh
-#export VAULT_ADDR=http://127.0.0.1:8200
-#export VAULT_SKIP_VERIFY=true
-#EOF
+cat << EOF > /etc/profile.d/vault.sh
+export VAULT_ADDR=http://${vault_sshhost_address}:8200
+export VAULT_SKIP_VERIFY=true
+EOF
 
-#source /etc/profile.d/vault.sh
-#echo "source /etc/profile.d/vault.sh" >> ~ubuntu/.bashrc
+source /etc/profile.d/vault.sh
+echo "source /etc/profile.d/vault.sh" >> ~ubuntu/.bashrc

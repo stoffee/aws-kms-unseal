@@ -1,4 +1,4 @@
-# Vault Auto-unseal using AWS KMS
+# Vault Auto-unseal using AWS KMS and RDS MYSQL database permissions & Vault Ca backed SSH
 
 These assets are provided to perform the tasks described in the [Vault Auto-unseal with AWS KMS](https://learn.hashicorp.com/vault/operations/ops-autounseal-aws-kms) guide.
 
@@ -23,11 +23,12 @@ $ terraform plan
 # Output provides the SSH instruction
 $ terraform apply
 
-# SSH into the EC2 machine
+# Look in the output for the vault server ssh info
+# Connect to the vault server
 $ ssh ubuntu@<IP_ADDRESS> -i private.key
 
 #----------------------------------
-# Once inside the EC2 instance...
+# Once inside the vault instance...
 $ export VAULT_ADDR=http://127.0.0.1:8200
 
 $ vault status

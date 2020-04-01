@@ -27,7 +27,7 @@ resource "aws_instance" "vault" {
   instance_type = "t2.medium"
   count         = 1
   subnet_id     = aws_subnet.public_subnet.id
-  key_name      = "cdunlap-aws"
+  key_name      = var.ssh_key_name
 
   security_groups = [
     aws_security_group.vault.id,

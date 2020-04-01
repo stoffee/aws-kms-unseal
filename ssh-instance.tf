@@ -3,7 +3,7 @@ resource "aws_instance" "ssh" {
   instance_type = "t2.medium"
   count         = 1
   subnet_id     = aws_subnet.public_subnet.id
-  key_name      = "cdunlap-aws"
+  key_name      = var.ssh_key_name
 
   security_groups = [
     aws_security_group.vault.id,
@@ -26,6 +26,7 @@ data "template_file" "ssh" {
   vars = {
     vault_url  = var.vault_url
     aws_region = var.aws_region
+    vault_sshhost_address = var.vault_sshhost_address
   }
 }
 
