@@ -1,4 +1,4 @@
-# Vault Auto-unseal using AWS KMS and RDS MYSQL database permissions & Vault Ca backed SSH
+# Vault Auto-unseal using AWS KMS and RDS MYSQL database permissions & Vault CA backed SSH
 
 This repo contains a file storage based Vault single server in AWS.
             ** THIS IS NOT FOR PRODUCTION **
@@ -44,17 +44,11 @@ $ cat /opt/vault/setup/vault.unseal.info
 # Login on any server with the root token from above
 $ vault login <INITIAL_ROOT_TOKEN>
 ```
-### Demo Cheat Sheet
 #
-#-----------------------------------
-#
-NGINX Certs Demo
+## NGINX Certs Demo
  Run the scipt `/opt/vault/nginx_demo.sh`
-
 #
-#----------------------------------
-#
-Postgres Demo<br>
+## Postgres Demo
 $ `vault login <INITIAL_ROOT_TOKEN>`<br>
 $ `vault read database/creds/admin-role`<br>
 $ `psql -h terraform-20191107214742817000000001.caotp6j0pjol.us-west-1.rds.amazonaws.com -d proddb -U`<br>
@@ -71,9 +65,7 @@ pg_catalog.text)
 FROM pg_catalog.pg_user u
 ORDER BY 1;
 ```
-
-#----------------------------------
-
+#
 # Clean up...
 $ `terraform destroy -force`<br>
 $ `rm -rf .terraform terraform.tfstate*`
