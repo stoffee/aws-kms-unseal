@@ -66,6 +66,11 @@ FROM pg_catalog.pg_user u
 ORDER BY 1;
 ```
 #
+## Transit Engine Demo
+$ `vault write transit/encrypt/orders plaintext=$(base64 <<< "4111 1111 1111 1111")`<br>
+$ `vault write transit/decrypt/orders ciphertext=“CIPHER"`<br>
+$ `base64 -d <<< RESULTOFABOVE`
+#
 # Clean up...
 $ `terraform destroy -force`<br>
 $ `rm -rf .terraform terraform.tfstate*`
