@@ -13,7 +13,7 @@ resource "aws_vpc" "vpc" {
 
   tags = {
     Name  = "${var.namespace}-${random_pet.env.id}"
-    Owner = "var.owner"
+    Owner = var.owner
     TTL   = "96"
   }
 }

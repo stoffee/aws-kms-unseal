@@ -54,3 +54,7 @@ variable "vaultdb_password" {
 variable "owner" {
   default = "cdunlap"
 }
+
+variable "ssh_key_name" {
+  default = "cdunlap-aws"
+}

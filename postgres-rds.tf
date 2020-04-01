@@ -10,7 +10,7 @@ resource "aws_db_instance" "proddb" {
   publicly_accessible = true
   skip_final_snapshot = true
   tags = {
-    Owner = "cdunlap"
+    Owner = var.owner
     TTL   = "96"
   }
 }
@@ -27,7 +27,7 @@ resource "aws_db_instance" "vault" {
   publicly_accessible = true
   skip_final_snapshot = true
   tags = {
-    Owner = "cdunlap"
+    Owner = var.owner
     TTL   = "96"
   }
 }
