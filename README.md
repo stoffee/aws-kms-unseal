@@ -104,8 +104,8 @@ $ `vault write -field=signed_key ssh-client-signer/sign/my-role public_key=@$HOM
 ### Now ssh to the client host:
 $ `ssh -i signed-cert.pub -i ~/.ssh/id_rsa ubuntu@13.57.195.23`
 
-### now that we can connect to the host, we want to connnect through the bastion
-**_ THIS IS IN THE OUTPUT OF TERRAFORM _**
+### Now that we can connect to the host, we want to connnect through the bastion
+**_THIS IS IN THE OUTPUT OF TERRAFORM_**
 #### Add this to vault server ~vault/.ssh/ssh_config
 ```
 Host bastion
