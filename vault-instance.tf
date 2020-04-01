@@ -24,7 +24,7 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "vault" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.medium"
+  instance_type = var.instance_type
   count         = 1
   subnet_id     = aws_subnet.public_subnet.id
   key_name      = var.ssh_key_name

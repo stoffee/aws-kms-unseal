@@ -63,3 +63,7 @@ variable "owner" {
 variable "ssh_key_name" {
   default = "my-aws-ssh-key"
 }
+
+variable "instance_type" {
+  default = "t2.micro"
+}
