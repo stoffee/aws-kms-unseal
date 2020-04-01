@@ -29,9 +29,10 @@ $ `terraform plan`
 
 #### Output provides the SSH instruction
 $ `terraform apply`
-
+#
+### Connect to the servers
 #### Connect to the vault, ssh, and bastion servers
-* Look in the output for the vault server ssh info
+* Look in the terraform output for the server ssh info<br>
 $ `ssh -i private.key ubuntu@<IP_ADDRESS>`
 
 #### Once logged in to any instance
@@ -65,7 +66,7 @@ ORDER BY 1;
 ```
 #
 ## Transit Engine Demo
-$ `vault login`
+$ `vault login`<br>
 $ `vault write transit/encrypt/orders plaintext=$(base64 <<< "4111 1111 1111 1111")`<br>
 $ `vault write transit/decrypt/orders ciphertext=“CIPHER"`<br>
 $ `base64 -d <<< <RESULTOFABOVE>`
