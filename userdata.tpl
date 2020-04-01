@@ -392,5 +392,5 @@ EOH
 
 
 
-
+hostnamectl set-hostname vault
 shutdown -r now

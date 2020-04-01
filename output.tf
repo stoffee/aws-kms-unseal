@@ -23,23 +23,17 @@ output "ssh" {
 ----
 
 ----
-On the SSH host do this:
+On the SSH host and the bastion host do one of these:
 sudo curl -o /etc/ssh/trusted-user-ca-keys.pem http://${aws_instance.vault[0].public_ip}:8200/v1/ssh-client-signer/public_key  
 or
 sudo su -
 VAULT_ADDR=http://${aws_instance.vault[0].public_ip}:8200 vault read -field=public_key ssh-client-signer/config/ca > /etc/ssh/trusted-user-ca-keys.pem
 
 ----
-Update the sshd_config:
+Update the sshd_config on both SSH and Bastion host:
 # /etc/ssh/sshd_config
 # ...
 TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
-# Tunnel SSH connections through a single subnet
-Host bastion
-  Hostname ${aws_instance.vault[0].public_dns}
-  IdentityFile ~/.ssh/id_rsa
-  CertificateFile ~/.ssh/id_rsa-poc-cert.pub
-  User ubuntu
 ---
 Restart sshd: sudo systemctl restart sshd
 
@@ -70,7 +64,7 @@ Add this to vault server ~vault/.ssh/ssh_config
 Host bastion
   Hostname ${aws_instance.vault[0].public_dns}
   IdentityFile ~/.ssh/id_rsa
-  CertificateFile ~/.ssh/id_rsa-poc-cert.pub
+  CertificateFile ~/.ssh/signed-cert.pub
   User ubuntu
 Host 10.10.10.10
   IdentityFile ~/.ssh/id_rsa
@@ -83,8 +77,6 @@ Add this to /etc/hosts file on the vault sever:
 ---
 Now let's try to connect:
 ssh -i signed-cert.pub -i ~/.ssh/id_rsa ubuntu@10.10.10.10
-
-
 
 SSH
 }
