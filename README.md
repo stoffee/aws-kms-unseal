@@ -74,6 +74,7 @@ $ `vault write transit/decrypt/orders ciphertext=“CIPHER"`<br>
 $ `base64 -d <<< <RESULTOFABOVE>`
 #
 ## SSH Demo
+**_THIS IS IN THE OUTPUT OF TERRAFORM_**
 #### On the SSH host and the bastion host do one of these:
 $ `sudo curl -o /etc/ssh/trusted-user-ca-keys.pem http://54.176.94.52:8200/v1/ssh-client-signer/public_key`<br>
 or<br>
@@ -105,7 +106,6 @@ $ `vault write -field=signed_key ssh-client-signer/sign/my-role public_key=@$HOM
 $ `ssh -i signed-cert.pub -i ~/.ssh/id_rsa ubuntu@13.57.195.23`
 
 ### Now that we can connect to the host, we want to connnect through the bastion
-**_THIS IS IN THE OUTPUT OF TERRAFORM_**
 #### Add this to vault server ~vault/.ssh/ssh_config
 ```
 Host bastion
