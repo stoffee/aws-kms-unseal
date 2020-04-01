@@ -50,3 +50,7 @@ variable "vaultdb_username" {
 variable "vaultdb_password" {
   default = "UseHashiCorpVault"
 }
+
+variable "owner" {
+  default = "cdunlap"
+}
