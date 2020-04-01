@@ -66,36 +66,36 @@ pg_catalog.text)
 FROM pg_catalog.pg_user u
 ORDER BY 1;
 ```
-#
+
 ## Transit Engine Demo
 $ `vault login`<br>
 $ `vault write transit/encrypt/orders plaintext=$(base64 <<< "4111 1111 1111 1111")`<br>
 $ `vault write transit/decrypt/orders ciphertext=“CIPHER"`<br>
 $ `base64 -d <<< <RESULTOFABOVE>`
-#
+
 ## SSH Demo
 #### On the SSH host and the bastion host do one of these:
 $ `sudo curl -o /etc/ssh/trusted-user-ca-keys.pem http://54.176.94.52:8200/v1/ssh-client-signer/public_key`<br>
 or<br>
 $ `sudo su -`
 $ `VAULT_ADDR=http://54.176.94.52:8200 vault read -field=public_key ssh-client-signer/config/ca > /etc/ssh/trusted-user-ca-keys.pem`<br>
-#
+
 #### Update the sshd_config on both SSH and Bastion host:
 $ `sudo vi /etc/ssh/sshd_config`
 ```
 # ...
 TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
 ```
-#
+
 #### Restart sshd
 $ `sudo systemctl restart sshd`
-#
+
 ### Do this on the vault server:
 #### create a sshkey:
 $ `ssh-keygen -t rsa -C "ubuntu"`
-#
+
 #### Ask Vault to sign the public key:
-$ `vault login`
+$ `vault login`<br>
 $ `vault write ssh-client-signer/sign/my-role public_key=@$HOME/.ssh/id_rsa.pub`
 ----
 #### Save the signed key to disk:
