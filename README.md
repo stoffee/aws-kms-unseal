@@ -54,10 +54,10 @@ NGINX Certs Demo
 #
 #----------------------------------
 #
-Postgres Demo
-$ `vault login <INITIAL_ROOT_TOKEN>`
-$ `vault read database/creds/admin-role`
-$ `psql -h terraform-20191107214742817000000001.caotp6j0pjol.us-west-1.rds.amazonaws.com -d proddb -U`
+Postgres Demo<br>
+$ `vault login <INITIAL_ROOT_TOKEN>`<br>
+$ `vault read database/creds/admin-role`<br>
+$ `psql -h terraform-20191107214742817000000001.caotp6j0pjol.us-west-1.rds.amazonaws.com -d proddb -U`<br>
 ```sql
 USERNAME -W
 SELECT u.usename AS "Role name",
@@ -75,5 +75,5 @@ ORDER BY 1;
 #----------------------------------
 
 # Clean up...
-$ `terraform destroy -force`
+$ `terraform destroy -force`<br>
 $ `rm -rf .terraform terraform.tfstate*`
