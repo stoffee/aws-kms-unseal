@@ -12,7 +12,7 @@ output "connections" {
   value = <<VAULT
 Connect to Vault via SSH   ssh -i private.key ubuntu@${aws_instance.vault[0].public_ip}
 Connect to SSH Host        ssh -i private.key ubuntu@${aws_instance.ssh[0].public_ip}
-Connect to Bastion Host    ssh -i private.key ubuntu@${aws_instance.bastion.public_ip}
+Connect to Bastion Host    ssh -i private.key ubuntu@${aws_instance.bastion[0].public_ip}
 Vault web interface  http://${aws_instance.vault[0].public_ip}:8200/ui
 NGINX web interface  https://${aws_instance.vault[0].public_ip}
 VAULT
