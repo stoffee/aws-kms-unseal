@@ -4,7 +4,7 @@ resource "aws_db_instance" "proddb" {
   engine              = "postgres"
   engine_version      = "11.5"
   instance_class      = "db.t2.micro"
-  name                = "proddb"
+  db_name                = "proddb"
   username            = var.proddb_username
   password            = var.proddb_password
   publicly_accessible = true
@@ -21,7 +21,7 @@ resource "aws_db_instance" "vault" {
   engine              = "postgres"
   engine_version      = "11.5"
   instance_class      = "db.t2.micro"
-  name                = "vault"
+  db_name                = "vault"
   username            = var.vaultdb_username
   password            = var.vaultdb_password
   publicly_accessible = true
