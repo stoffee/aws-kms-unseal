@@ -3,7 +3,7 @@ variable "aws_region" {
 }
 
 variable "aws_zone" {
-  default = "us-west-1c"
+  default = "us-west-1a"
 }
 
 variable "aws_zone-2" {
@@ -11,7 +11,7 @@ variable "aws_zone-2" {
 }
 
 variable "vault_url" {
-  default = "https://releases.hashicorp.com/vault/1.8.0/vault_1.8.0_linux_amd64.zip"
+  default = "https://releases.hashicorp.com/vault/1.11.2/vault_1.11.2_linux_amd64.zip"
 }
 
 variable "vpc_cidr" {
