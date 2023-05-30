@@ -1,13 +1,13 @@
 variable "aws_region" {
-  default = "us-west-1"
+  default = "us-west-2"
 }
 
 variable "aws_zone" {
-  default = "us-west-1a"
+  default = "us-west-2a"
 }
 
 variable "aws_zone-2" {
-  default = "us-west-1b"
+  default = "us-west-2b"
 }
 
 variable "vault_url" {
